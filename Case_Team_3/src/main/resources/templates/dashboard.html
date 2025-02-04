@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Admin Dashboard</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/register-employee">Tạo tài khoản nhân viên</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/manage-rooms">Quản lý phòng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/manage-users">Quản lý người dùng</a>
+                    </li>
+                </ul>
+                <form th:action="@{/logout}" method="post" class="d-flex">
+                    <span class="navbar-text me-3">
+                        Xin chào, <span sec:authentication="name"></span>
+                    </span>
+                    <button type="submit" class="btn btn-outline-light">Đăng xuất</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div th:if="${param.employeeCreated}" class="alert alert-success">
+            Tạo tài khoản nhân viên thành công!
+        </div>
+        <h2>Quản lý hệ thống</h2>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Quản lý nhân viên</h5>
+                        <p class="card-text">Tạo và quản lý tài khoản nhân viên</p>
+                        <a href="/admin/register-employee" class="btn btn-primary">Tạo tài khoản mới</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Quản lý phòng</h5>
+                        <p class="card-text">Thêm, sửa, xóa thông tin phòng</p>
+                        <a href="/admin/manage-rooms" class="btn btn-primary">Quản lý phòng</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Quản lý người dùng</h5>
+                        <p class="card-text">Xem và quản lý tài khoản người dùng</p>
+                        <a href="/admin/manage-users" class="btn btn-primary">Quản lý người dùng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

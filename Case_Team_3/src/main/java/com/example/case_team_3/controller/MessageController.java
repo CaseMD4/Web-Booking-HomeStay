@@ -20,10 +20,11 @@ public class MessageController {
     @MessageMapping("/send")
     @SendTo("/topic/messages")
     public Message sendMessage(Message message) {
-        return messageService.saveMessage(message.getSender(), message.getReceiver(), message.getContent());
-    }
-    @GetMapping("/history")
-    public List<Message> getChatHistory(@RequestParam String user1, @RequestParam String user2) {
-        return messageService.getChatHistory(user1, user2);
+        Message savedMessage =messageService.saveMessage(message);
+        if (messageService.isFistMessage(message.getSender())){
+            Message autoReyply =messageService.autoReplyMessage(message.getSender());
+            return autoReyply;
+        }
+        return savedMessage;
     }
 }

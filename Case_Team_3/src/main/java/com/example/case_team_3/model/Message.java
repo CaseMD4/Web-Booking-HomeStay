@@ -16,4 +16,5 @@ public class Message {
     private String receiver;
     private String content;
     private LocalDateTime timestamp;
+    private Boolean isReply;
 }

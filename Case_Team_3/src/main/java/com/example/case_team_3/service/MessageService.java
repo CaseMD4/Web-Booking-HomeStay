@@ -13,15 +13,18 @@ public class MessageService {
     @Autowired
   private   MessageRepository messageRepository;
 
-    public Message saveMessage(String sender, String receiver, String content) {
-        Message message = new Message();
-        message.setSender(sender);
-        message.setReceiver(receiver);
-        message.setContent(content);
-        message.setTimestamp(LocalDateTime.now());
+    public Message saveMessage(Message message) {
         return messageRepository.save(message);
     }
-    public List<Message> getChatHistory(String user1, String user2) {
-        return messageRepository.findAllByOrderByIdDesc(user1, user2);
-    }
+   public boolean isFistMessage(String sender) {
+        List<Message> messages = messageRepository.findBySender(sender);
+        return messages.isEmpty();
+   }
+   public Message autoReplyMessage(String sender) {
+        Message reply =new Message();
+        reply.setSender("Bot");
+        reply.setContent("Chào bạn tôi có thể giúp gì cho bạn");
+        reply.setIsReply(true);
+        return messageRepository.save(reply);
+   }
 }

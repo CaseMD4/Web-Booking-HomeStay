@@ -4,6 +4,7 @@ import com.example.case_team_3.model.Booking;
 import com.example.case_team_3.model.Room;
 import com.example.case_team_3.repository.BookingRepository;
 import com.example.case_team_3.repository.RoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @Service
 public class RoomService {
+    @Autowired
     private  RoomRepository roomRepository;
     private BookingRepository bookingRepository;
         public List<Room> getAllRooms() {

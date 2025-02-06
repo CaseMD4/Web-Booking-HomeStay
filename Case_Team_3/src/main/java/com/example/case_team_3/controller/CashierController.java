@@ -18,7 +18,7 @@ public class CashierController {
     @Autowired
     private RoomService roomService;
 
-    @GetMapping("/cashierRoom")
+    @GetMapping("")
     public String viewRooms(@RequestParam(required = false) String status, @RequestParam(required = false) String type, Model model) {
         List<Room> rooms;
         if (status != null) {

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Homestay Booking</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .content {
+            flex: 1 0 auto;
+        }
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .navbar .nav-link, .navbar .navbar-brand {
+            color: #ffffff;
+        }
+        .navbar {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .footer {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+            color: #ffffff;
+            padding: 20px 0;
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .form-control {
+            border-radius: 5px;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+        header {
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        header h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        header p {
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+<div class="content">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-home"></i> Homestay Booking
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Trang chủ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Giới thiệu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Liên hệ</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header>
+        <h1>Đăng nhập để đặt phòng Homestay</h1>
+        <p class="lead">Trải nghiệm dịch vụ tốt nhất với chúng tôi</p>
+    </header>
+
+    <!-- Login Form -->
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center">Đăng nhập</h2>
+            <form>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" placeholder="Nhập email của bạn" required>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Mật khẩu</label>
+                    <input type="password" class="form-control" id="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Đăng nhập</button>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="#">Quên mật khẩu?</a>
+                </div>
+                <div class="text-center mt-3">
+                    <p>Chưa có tài khoản? <a href="#">Đăng ký ngay</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer text-center">
+    <div class="container">
+        <p>&copy; 2023 Homestay Booking. Bảo lưu mọi quyền.</p>
+        <p>Liên hệ: <a href="mailto:info@homestaybooking.com" class="text-white">info@homestaybooking.com</a></p>
+        <div class="social-icons">
+            <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

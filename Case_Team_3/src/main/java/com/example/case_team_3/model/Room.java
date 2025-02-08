@@ -30,6 +30,6 @@ public class Room {
     private List<Booking> bookings;
 
     public enum RoomStatus {
-        available, booked, cleaning,dirty
+        available, booked, cleaning
     }
 }

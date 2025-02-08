@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
-    List<Room> findByRoomStatus(Room.RoomStatus status);
-    List<Room> findByRoomType_RoomTypeName(String roomType);
+    List<Room> findByRoomStatus(Room.RoomStatus roomStatus);
 }

@@ -5,10 +5,7 @@ import com.example.case_team_3.service.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,25 +17,23 @@ public class CashierController {
 
     @GetMapping("")
     public String viewRooms(@RequestParam(required = false) String status, @RequestParam(required = false) String type, Model model) {
-        List<Room> rooms;
-        if (status != null) {
-            rooms = roomService.getRoomsByStatus(Room.RoomStatus.valueOf(status));
-        } else if (type != null) {
-            rooms = roomService.getRoomsByType(type);
-        } else {
-            rooms = roomService.getAllRooms();
-        }
-        model.addAttribute("rooms", rooms);
+        model.addAttribute("rooms",roomService.getRoomsByStatus(status));
+        model.addAttribute("filter", status);
         return "cashierHome";
     }
-
-    @PostMapping("/updateRoomStatus")
-    public String updateRoomStatus(@RequestParam Long roomId, @RequestParam String status, Model model) {
-        Float unpaidAmount = roomService.getUnpaidAmount(roomId);
-        if (!roomService.updateRoomStatus(roomId, status)) {
-            model.addAttribute("unpaidAmount", unpaidAmount);
-            return "payment_pending"; // Chuyển đến trang báo nợ
+    @GetMapping("/{id}/payment")
+    public String viewPayments(@PathVariable Long id, Model model) {
+        model.addAttribute("Room",roomService.getRoomById(id));
+        model.addAttribute("price",roomService.getUnpaidAmount(id));
+        return "payment_pending";
+    }
+    @PostMapping("/")
+    public String checkOut(@RequestParam("roomId") Long roomId) {
+        Room room = roomService.getRoomById(roomId);
+        if (room != null) {
+            room.setRoomStatus(Room.RoomStatus.cleaning);
+            roomService.saveRoom(room);
         }
-        return "redirect:/cashier/cashierRoom";
+        return "redirect:/cashier";
     }
 }

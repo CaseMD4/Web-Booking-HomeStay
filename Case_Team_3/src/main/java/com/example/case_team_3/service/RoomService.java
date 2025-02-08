@@ -14,15 +14,25 @@ import java.util.List;
 public class RoomService {
     @Autowired
     private  RoomRepository roomRepository;
+    @Autowired
     private BookingRepository bookingRepository;
-        public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+    public List<Room> getRoomsByStatus(String status) {
+
+        if (status == null || status.isEmpty()) {
+            return roomRepository.findAll();
+        }
+        try {
+            Room.RoomStatus statusEnum = Room.RoomStatus.valueOf(status);
+            return roomRepository.findByRoomStatus(statusEnum);
+        } catch (IllegalArgumentException e) {
+            return roomRepository.findAll();
+        }
     }
-    public List<Room> getRoomsByStatus(Room.RoomStatus status) {
-        return roomRepository.findByRoomStatus(status);
+    public void saveRoom(Room room) {
+        roomRepository.save(room);
     }
-    public List<Room> getRoomsByType(String roomType) {
-        return roomRepository.findByRoomType_RoomTypeName(roomType);
+    public  Room getRoomById(Long roomId) {
+        return roomRepository.findById(roomId).orElse(null);
     }
     public Float getUnpaidAmount(Long roomId) {
         List<Booking> unpaidBookings = bookingRepository.findByRoom_RoomIdAndBookingStatus(roomId, Booking.BookingStatus.confirmed);
@@ -46,5 +56,14 @@ public class RoomService {
         room.setRoomStatus(Room.RoomStatus.valueOf(status));
         roomRepository.save(room);
         return true;
+    }
+    public boolean markRoomAsCleaned(Long roomId) {
+        Room room = roomRepository.findById(roomId).orElse(null);
+        if (room != null && room.getRoomStatus() == Room.RoomStatus.cleaning) {
+            room.setRoomStatus(Room.RoomStatus.available);
+            roomRepository.save(room);
+            return true;
+        }
+        return false;
     }
 }

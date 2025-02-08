@@ -16,6 +16,17 @@
             <button type="submit" class="btn btn-danger">Đăng xuất</button>
         </form>
     </div>
+    <div class="mb-3">
+        <form th:action="@{/cashier}" method="get" class="d-flex">
+            <select name="status" class="form-select me-2">
+                <option value="">Tất cả</option>
+                <option value="available">Trống</option>
+                <option value="booked">Đã Đặt</option>
+                <option value="cleaning">Đang Dọn</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Lọc</button>
+        </form>
+    </div>
 
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
@@ -35,21 +46,15 @@
             <td><img th:src="${room.roomImg}" class="img-thumbnail" width="100px"></td>
             <td th:text="${room.roomType.roomTypeName}"></td>
             <td>
-                <span class="badge bg-success" th:if="${room.roomStatus == 'available'}">Trống</span>
-                <span class="badge bg-warning" th:if="${room.roomStatus == 'booked'}">Đã Đặt</span>
-                <span class="badge bg-secondary" th:if="${room.roomStatus == 'cleaning'}">Đang Dọn</span>
+                <span class="badge bg-success" th:if="${room.roomStatus == room.roomStatus.available}">Trống</span>
+                <span class="badge bg-warning" th:if="${room.roomStatus ==room.roomStatus.booked}">Đã Đặt</span>
+                <span class="badge bg-secondary" th:if="${room.roomStatus == room.roomStatus.cleaning}">Đang Dọn</span>
             </td>
             <td th:text="${room.roomPrice} + ' VNĐ'"></td>
             <td th:text="${room.roomDescription}"></td>
             <td>
-                <form th:action="@{/cashier/updateRoomStatus}" method="post">
-                    <input type="hidden" name="roomId" th:value="${room.roomId}">
-                    <select name="status" class="form-select">
-                        <option value="available">Trống</option>
-                        <option value="booked">Đã Đặt</option>
-                        <option value="cleaning">Đang Dọn</option>
-                    </select>
-                    <button type="submit" class="btn btn-primary mt-2">Cập Nhật</button>
+                <form th:action="@{'/cashier/' + ${room.roomId} + '/payment'}" method="get" th:if="${room.roomStatus == room.roomStatus.booked}">
+                    <button type="submit" class="btn btn-danger mt-2">Thanh Toán</button>
                 </form>
             </td>
         </tr>

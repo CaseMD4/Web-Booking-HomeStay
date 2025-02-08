@@ -56,7 +56,7 @@ public class SecurityConfig {
                             response.sendRedirect("/cashier");
                             break;
                         case "ROLE_CLEANER":
-                            response.sendRedirect("/cleanerhome");
+                            response.sendRedirect("/cleaner-home");
                             break;
                         default:
                             response.sendRedirect("/index");

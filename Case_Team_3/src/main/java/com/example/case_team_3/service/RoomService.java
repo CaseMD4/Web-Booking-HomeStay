@@ -2,11 +2,22 @@ package com.example.case_team_3.service;
 
 import com.example.case_team_3.model.Booking;
 import com.example.case_team_3.model.Room;
-import com.example.case_team_3.repository.BookingRepository;
+import com.example.case_team_3.model.User;
+import com.example.case_team_3.model.cashier.TransactionHistory;
+import com.example.case_team_3.repository.UserRepository;
 import com.example.case_team_3.repository.RoomRepository;
+import com.example.case_team_3.repository.TransactionHistoryRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import org.apache.logging.log4j.message.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -15,7 +26,13 @@ public class RoomService {
     @Autowired
     private  RoomRepository roomRepository;
     @Autowired
-    private BookingRepository bookingRepository;
+    private TransactionHistoryRepository transactionHistoryRepository;
+    @Autowired
+    UserRepository userRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     public List<Room> getRoomsByStatus(String status) {
 
         if (status == null || status.isEmpty()) {
@@ -31,11 +48,11 @@ public class RoomService {
     public void saveRoom(Room room) {
         roomRepository.save(room);
     }
-    public  Room getRoomById(Long roomId) {
+    public  Room getRoomById(Integer roomId) {
         return roomRepository.findById(roomId).orElse(null);
     }
-    public Float getUnpaidAmount(Long roomId) {
-        List<Booking> unpaidBookings = bookingRepository.findByRoom_RoomIdAndBookingStatus(roomId, Booking.BookingStatus.confirmed);
+    public Float getUnpaidAmount(Integer roomId) {
+        List<Booking> unpaidBookings = findByRoom_RoomIdAndBookingStatus(roomId, Booking.BookingStatus.confirmed);
         float totalAmount = 0f;
         for (Booking booking : unpaidBookings) {
             long totalSeconds = ChronoUnit.SECONDS.between(booking.getBookingCheckInDate(), booking.getBookingCheckOutDate());
@@ -45,25 +62,51 @@ public class RoomService {
 
         return totalAmount;
     }
-    public boolean updateRoomStatus(Long roomId, String status) {
-        if ("available".equals(status)) {
-            Float unpaidAmount = getUnpaidAmount(roomId);
-            if (unpaidAmount > 0) {
-                return false;
-            }
-        }
-        Room room = roomRepository.findById(roomId).orElseThrow(() -> new RuntimeException("Room not found"));
-        room.setRoomStatus(Room.RoomStatus.valueOf(status));
-        roomRepository.save(room);
-        return true;
-    }
-    public boolean markRoomAsCleaned(Long roomId) {
+    public void updateRoomStatusToAvailable(Integer roomId) {
         Room room = roomRepository.findById(roomId).orElse(null);
         if (room != null && room.getRoomStatus() == Room.RoomStatus.cleaning) {
             room.setRoomStatus(Room.RoomStatus.available);
             roomRepository.save(room);
-            return true;
         }
-        return false;
+    }
+    public void processPayment(Integer roomId, Float amountPaid) {
+        Room room = roomRepository.findById(roomId).orElse(null);
+        if (room != null) {
+            TransactionHistory transaction = new TransactionHistory();
+            transaction.setRoom(room);
+            transaction.setAmountPaid(amountPaid);
+            transaction.setTransactionTime(LocalDateTime.now());
+            transactionHistoryRepository.save(transaction);
+
+            room.setRoomStatus(Room.RoomStatus.cleaning);
+            roomRepository.save(room);
+            messagingTemplate.convertAndSend("/topic/cleaning", "Phòng " + room.getRoomId() + " cần dọn dẹp.");
+        }
+    }
+    public List<TransactionHistory> fetchTransactionHistory(Integer roomId) {
+        return transactionHistoryRepository.findByRoom_RoomId(roomId);
+    }
+    public String getNameCustomerBooking(Integer roomId) {
+     Integer idUser = findUserIdByRoomId(roomId);
+        User user =userRepository.findById(idUser).orElse(null);
+      String nameUser =user.getUserUsername();
+      return nameUser;
+    }
+    public List<Booking> findByRoom_RoomIdAndBookingStatus(Integer roomId, Booking.BookingStatus bookingStatus) {
+        String jpql = "SELECT b FROM Booking b WHERE b.room.id = :roomId AND b.bookingStatus = :status";
+        TypedQuery<Booking> query = entityManager.createQuery(jpql, Booking.class);
+        query.setParameter("roomId", roomId);
+        query.setParameter("status", bookingStatus);
+        return query.getResultList();
+    }
+    public Integer findUserIdByRoomId(Integer roomId) {
+        try {
+            return entityManager.createQuery(
+                            "SELECT b.user.id FROM Booking b WHERE b.room.id = :roomId", Integer.class)
+                    .setParameter("roomId", roomId)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

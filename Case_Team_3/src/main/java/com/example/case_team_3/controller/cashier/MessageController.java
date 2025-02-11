@@ -1,4 +1,4 @@
-package com.example.case_team_3.controller;
+package com.example.case_team_3.controller.cashier;
 
 import com.example.case_team_3.model.Message;
 import com.example.case_team_3.service.MessageService;
@@ -6,11 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/api/chat")

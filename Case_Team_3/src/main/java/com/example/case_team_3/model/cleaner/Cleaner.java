@@ -1,5 +1,6 @@
-package com.example.case_team_3.model;
+package com.example.case_team_3.model.cleaner;
 
+import com.example.case_team_3.model.Employee;
 import jakarta.persistence.Entity;
 import lombok.Data;
 

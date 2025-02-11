@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Danh Sách Phòng</title>
@@ -16,8 +15,9 @@
             <button type="submit" class="btn btn-danger">Đăng xuất</button>
         </form>
     </div>
+
     <div class="mb-3">
-        <form th:action="@{/cashier}" method="get" class="d-flex">
+        <form th:action="@{/templates/cashier}" method="get" class="d-flex">
             <select name="status" class="form-select me-2">
                 <option value="">Tất cả</option>
                 <option value="available">Trống</option>
@@ -47,7 +47,7 @@
             <td th:text="${room.roomType.roomTypeName}"></td>
             <td>
                 <span class="badge bg-success" th:if="${room.roomStatus == room.roomStatus.available}">Trống</span>
-                <span class="badge bg-warning" th:if="${room.roomStatus ==room.roomStatus.booked}">Đã Đặt</span>
+                <span class="badge bg-warning" th:if="${room.roomStatus == room.roomStatus.booked}">Đã Đặt</span>
                 <span class="badge bg-secondary" th:if="${room.roomStatus == room.roomStatus.cleaning}">Đang Dọn</span>
             </td>
             <td th:text="${room.roomPrice} + ' VNĐ'"></td>
@@ -56,6 +56,7 @@
                 <form th:action="@{'/cashier/' + ${room.roomId} + '/payment'}" method="get" th:if="${room.roomStatus == room.roomStatus.booked}">
                     <button type="submit" class="btn btn-danger mt-2">Thanh Toán</button>
                 </form>
+                <a th:href="@{'/cashier/' + ${room.roomId} + '/transactions'}" class="btn btn-info mt-2">Xem Lịch Sử</a>
             </td>
         </tr>
         </tbody>

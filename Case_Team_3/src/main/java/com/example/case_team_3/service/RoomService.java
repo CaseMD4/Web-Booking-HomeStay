@@ -2,8 +2,13 @@ package com.example.case_team_3.service;
 
 import com.example.case_team_3.model.Booking;
 import com.example.case_team_3.model.Room;
+import com.example.case_team_3.model.RoomType;
 import com.example.case_team_3.repository.BookingRepository;
 import com.example.case_team_3.repository.RoomRepository;
+import com.example.case_team_3.repository.RoomTypeRepository;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +16,153 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RoomService {
     @Autowired
     private  RoomRepository roomRepository;
+
+    @Autowired
+    private RoomTypeRepository roomTypeRepository;
+
+    @Autowired
     private BookingRepository bookingRepository;
-        public List<Room> getAllRooms() {
+
+    @Transactional
+    public Room updateRoomStatus(Integer roomId, String status) {
+        // Validate input
+        if (roomId == null) {
+            throw new IllegalArgumentException("ID phòng không được để trống");
+        }
+
+        if (status == null || status.trim().isEmpty()) {
+            throw new IllegalArgumentException("Trạng thái phòng không được để trống");
+        }
+
+        // Normalize status
+        status = status.toLowerCase().trim();
+
+        // Find room
+        Room room = roomRepository.findById(Long.valueOf(roomId))
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phòng với ID: " + roomId));
+
+        // Convert status to enum, handling case-insensitivity
+        try {
+            Room.RoomStatus newStatus = Room.RoomStatus.valueOf(status);
+            room.setRoomStatus(newStatus);
+        } catch (IllegalArgumentException e) {
+            // Map common variations or provide helpful error
+            switch (status) {
+                case "sẵn":
+                case "available":
+                    room.setRoomStatus(Room.RoomStatus.available);
+                    break;
+                case "thuê":
+                case "booked":
+                    room.setRoomStatus(Room.RoomStatus.booked);
+                    break;
+                case "dọn":
+                case "cleaning":
+                    room.setRoomStatus(Room.RoomStatus.cleaning);
+                    break;
+                case "bẩn":
+                case "dirty":
+                    room.setRoomStatus(Room.RoomStatus.dirty);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Trạng thái phòng không hợp lệ: " + status);
+            }
+        }
+
+        // Save and return
+        return roomRepository.save(room);
+    }
+
+    public Room findById(Long id) {
+        return roomRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Room not found with id: " + id));
+    }
+
+    public void updateRoom(Long id, Room roomDetails) {
+        Room existingRoom = findById(id);
+
+        // Update fields
+        existingRoom.setRoomDescription(roomDetails.getRoomDescription());
+        existingRoom.setRoomType(roomDetails.getRoomType());
+        existingRoom.setRoomPrice(roomDetails.getRoomPrice());
+        existingRoom.setRoomStatus(roomDetails.getRoomStatus());
+        existingRoom.setRoomImg(roomDetails.getRoomImg());
+
+        roomRepository.save(existingRoom);
+    }
+
+    public void deleteRoom(Long id) {
+        Room room = findById(id);
+        roomRepository.delete(room);
+    }
+
+
+
+    @Transactional
+    public Room getRoomById(Integer roomId) {
+        return roomRepository.findById(Long.valueOf(roomId))
+                .orElseThrow(() -> new RuntimeException("Phòng không tồn tại"));
+    }
+
+    @Transactional
+    public void deleteRoom(Integer roomId) {
+        Room room = getRoomById(roomId);
+        roomRepository.delete(room);
+    }
+
+
+    public List<RoomType> getAllRoomTypes() {
+        return roomTypeRepository.findAll();
+    }
+
+    public RoomType getRoomTypeById(Integer id) {
+        return roomTypeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy loại phòng"));
+    }
+
+    public RoomType createRoomType(String roomTypeName) {
+        // Trim and validate room type name
+        if (roomTypeName == null || roomTypeName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Tên loại phòng không được để trống");
+        }
+
+        // Normalize the room type name
+        roomTypeName = roomTypeName.trim();
+
+        // Check if room type already exists (case-insensitive)
+        RoomType existingRoomType = roomTypeRepository.findByRoomTypeName(roomTypeName);
+        if (existingRoomType != null) {
+            return existingRoomType;
+        }
+
+        // Create new room type
+        RoomType newRoomType = new RoomType();
+        newRoomType.setRoomTypeName(roomTypeName);
+        return roomTypeRepository.save(newRoomType);
+    }
+
+    public Room createRoom(Room room) {
+        // Validate room
+        if (room.getRoomType() == null) {
+            throw new IllegalArgumentException("Phòng phải có loại phòng");
+        }
+
+        // Set default status if not set
+        if (room.getRoomStatus() == null) {
+            room.setRoomStatus(Room.RoomStatus.available);
+        }
+
+        return roomRepository.save(room);
+    }
+
+    public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
+
     public List<Room> getRoomsByStatus(Room.RoomStatus status) {
         return roomRepository.findByRoomStatus(status);
     }

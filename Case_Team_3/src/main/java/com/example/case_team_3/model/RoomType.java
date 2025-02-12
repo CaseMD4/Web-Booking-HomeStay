@@ -16,4 +16,13 @@ public class RoomType {
 
     @OneToMany(mappedBy = "roomType")
     private List<Room> rooms;
+
+
+    @Override
+    public String toString() {
+        return "RoomType{" +
+                "roomTypeId=" + roomTypeId +
+                ", roomTypeName='" + roomTypeName + '\'' +
+                '}';
+    }
 }

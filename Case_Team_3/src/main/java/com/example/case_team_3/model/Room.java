@@ -32,4 +32,13 @@ public class Room {
     public enum RoomStatus {
         available, booked, cleaning,dirty
     }
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomId=" + roomId +
+                ", roomDescription='" + roomDescription + '\'' +
+                ", roomPrice=" + roomPrice +
+                ", roomStatus=" + roomStatus +
+                '}';
+    }
 }

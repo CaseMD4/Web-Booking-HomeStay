@@ -1,21 +1,32 @@
 package com.example.case_team_3.service;
 
+import com.example.case_team_3.repository.EmailRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.util.Properties;
 import java.util.Random;
 
+import com.example.case_team_3.repository.EmailRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Service
 public class EmailService {
-    
+
+    @Autowired
+    private EmailRepository emailRepository;
+
+
     @Value("${spring.mail.username}")
     private String username;
-    
+
     @Value("${spring.mail.password}")
     private String password;
+
 
     // Tạo mã xác nhận 6 chữ số
     public String generateNumericCode(int length) {
@@ -67,3 +78,4 @@ public class EmailService {
         }
     }
 }
+

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chọn phương thức thanh toán</title>
+</head>
+<body>
+<h1>Chọn phương thức thanh toán</h1>
+<form th:action="@{/payment/execute}" method="post">
+    <div>
+        <input type="radio" id="vnpay" name="paymentMethod" value="vnpay" required>
+        <label for="vnpay">VNPay</label>
+    </div>
+    <div>
+        <input type="radio" id="paypal" name="paymentMethod" value="paypal" required>
+        <label for="paypal">PayPal</label>
+    </div>
+    <button type="submit">Thanh toán</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đặt phòng</title>
+</head>
+<body>
+<h1>Đặt phòng cho phòng: <span th:text="${room.roomType.roomTypeName}"></span></h1>
+<div>
+  <img th:src="${room.roomImg}" alt="Room Image" width="200"/>
+</div>
+<form th:action="@{'/payment/process/' + ${room.roomId}}" th:object="${booking}" method="post">
+  <div>
+    <label>Ngày nhận phòng:</label>
+    <input type="datetime-local" th:field="*{bookingCheckInDate}" required/>
+  </div>
+  <div>
+    <label>Ngày trả phòng:</label>
+    <input type="datetime-local" th:field="*{bookingCheckOutDate}" required/>
+  </div>
+  <button type="submit">Đặt phòng</button>
+</form>
+<a th:href="@{/rooms}">Quay lại danh sách phòng</a>
+</body>
+</html>

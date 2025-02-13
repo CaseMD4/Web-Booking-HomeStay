@@ -1,6 +1,6 @@
 package com.example.case_team_3.controller.cleaner;
 
-import com.example.case_team_3.service.RoomService;
+import com.example.case_team_3.service.cashier_and_cleaner.RoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

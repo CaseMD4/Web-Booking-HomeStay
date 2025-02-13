@@ -1,4 +1,4 @@
-package com.example.case_team_3.repository;
+package com.example.case_team_3.repository.cashier_and_cleaner;
 
 import com.example.case_team_3.model.Room;
 import org.springframework.data.jpa.repository.JpaRepository;

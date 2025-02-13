@@ -1,7 +1,7 @@
 package com.example.case_team_3.controller.cashier;
 
 import com.example.case_team_3.model.Message;
-import com.example.case_team_3.service.MessageService;
+import com.example.case_team_3.service.cashier_and_cleaner.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;

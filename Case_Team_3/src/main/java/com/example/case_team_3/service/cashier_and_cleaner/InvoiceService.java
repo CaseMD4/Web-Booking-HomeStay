@@ -1,4 +1,4 @@
-package com.example.case_team_3.service;
+package com.example.case_team_3.service.cashier_and_cleaner;
 import com.example.case_team_3.model.cashier.Invoice;
 import com.example.case_team_3.model.cashier.TransactionHistory;
 import com.itextpdf.kernel.pdf.PdfDocument;

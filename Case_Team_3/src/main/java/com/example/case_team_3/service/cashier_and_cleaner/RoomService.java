@@ -1,19 +1,17 @@
-package com.example.case_team_3.service;
+package com.example.case_team_3.service.cashier_and_cleaner;
 
 import com.example.case_team_3.model.Booking;
 import com.example.case_team_3.model.Room;
 import com.example.case_team_3.model.User;
 import com.example.case_team_3.model.cashier.TransactionHistory;
 import com.example.case_team_3.repository.UserRepository;
-import com.example.case_team_3.repository.RoomRepository;
-import com.example.case_team_3.repository.TransactionHistoryRepository;
+import com.example.case_team_3.repository.cashier_and_cleaner.RoomRepository;
+import com.example.case_team_3.repository.cashier_and_cleaner.TransactionHistoryRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import org.apache.logging.log4j.message.SimpleMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 

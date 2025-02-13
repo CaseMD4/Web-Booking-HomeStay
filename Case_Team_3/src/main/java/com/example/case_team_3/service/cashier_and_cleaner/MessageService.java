@@ -1,4 +1,4 @@
-package com.example.case_team_3.service;
+package com.example.case_team_3.service.cashier_and_cleaner;
 
 import com.example.case_team_3.model.Message;
 import com.example.case_team_3.repository.MessageRepository;

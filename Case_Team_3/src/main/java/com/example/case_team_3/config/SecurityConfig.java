@@ -53,7 +53,7 @@ public class SecurityConfig {
                             response.sendRedirect("/admin/dashboard");
                             break;
                         case "ROLE_CASHIER":
-                            response.sendRedirect("/cashierHome");
+                            response.sendRedirect("/cashierhome");
                             break;
                         case "ROLE_CLEANER":
                             response.sendRedirect("/cleanerhome");
@@ -73,4 +73,6 @@ public class SecurityConfig {
         
         return http.build();
     }
+
+
 }

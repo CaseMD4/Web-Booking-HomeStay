@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách phòng</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Danh sách phòng</h2>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tên phòng</th>
+      <th>Giá</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Giả sử bạn truyền danh sách phòng trong model với key "rooms" -->
+    <tr th:each="room : ${rooms}">
+      <td th:text="${room.roomId}"></td>
+      <td th:text="${room.roomName}"></td>
+      <td th:text="${room.roomPrice}"></td>
+      <td>
+        <a th:href="@{'/rooms/paypal/create-order/' + ${room.roomId}}" class="btn btn-primary">Thanh toán bằng PayPal</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

@@ -3,16 +3,17 @@ package com.example.case_team_3.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Entity
 @Table(name = "booking")
+@IdClass(BookingId.class)
 public class Booking {
     @Id
     @ManyToOne
     @JoinColumn(name = "room_id")
     private Room room;
+
     @Id
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -23,8 +24,10 @@ public class Booking {
 
     @Enumerated(EnumType.STRING)
     private BookingStatus bookingStatus;
+
     private LocalDateTime bookingUpdateTime;
+
     public enum BookingStatus {
-        confirmed, completed, canceled
+        confirmed, completed, pending, canceled
     }
 }

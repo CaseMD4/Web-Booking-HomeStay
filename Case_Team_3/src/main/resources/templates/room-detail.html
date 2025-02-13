@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết phòng</title>
+</head>
+<body>
+<h1>Chi tiết phòng</h1>
+<div>
+  <strong>ID:</strong> <span th:text="${room.roomId}"></span>
+</div>
+<div>
+  <strong>Hình ảnh:</strong>
+  <img th:src="${room.roomImg}" alt="Room Image" width="200"/>
+</div>
+<div>
+  <strong>Kiểu phòng:</strong> <span th:text="${room.roomType.roomTypeName}"></span>
+</div>
+<div>
+  <strong>Trạng thái:</strong> <span th:text="${room.roomStatus}"></span>
+</div>
+<div>
+  <strong>Giá:</strong> <span th:text="${room.roomPrice}"></span>
+</div>
+<div>
+  <strong>Mô tả:</strong> <span th:text="${room.roomDescription}"></span>
+</div>
+<a th:href="@{/rooms}">Quay lại danh sách phòng</a> |
+<a th:href="@{'/rooms/book/' + ${room.roomId}}">Đặt phòng</a>
+</body>
+</html>

@@ -38,4 +38,18 @@ public class UserService {
         }
         throw new RuntimeException("Username hoặc mật khẩu không đúng!");
     }
+
+//    public User findByUsername(String username) {
+//        return userRepository.findByUserUsername(username);
+//    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByUserEmail(email);
+    }
+
+    public User findByUserUsername(String name) {
+
+
+        return userRepository.findByUserUsername(name);
+    }
 }

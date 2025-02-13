@@ -21,7 +21,7 @@ public class UserController {
     private RoomService roomService;
 
 //    customerHome
-    @RequestMapping("/customerHome")
+    @RequestMapping("/userHome")
     public String showCustomerHome() {
         return "customerHome";
     }

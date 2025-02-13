@@ -11,12 +11,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
+
         body {
+            display: flex;
+            flex-direction: column;
             background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
             background-size: cover;
+            background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            padding-top: 80px;
+        }
+        .navbar {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .card {
             background: rgba(255, 255, 255, 0.9);
@@ -30,42 +37,19 @@
             object-fit: cover;
             border-radius: 8px;
         }
-        .navbar-brand img {
-            max-height: 40px;
-        }
     </style>
 </head>
 <body>
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/admin/dashboard}">
-            <i class="fas fa-home me-2"></i> Quản Lý Homestay
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-home"></i> Admin Dashboard
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/admin/all-rooms}">
-                        <i class="fas fa-bed me-1"></i> >> Quản Lý Phòng
-                    </a>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <span class="navbar-text me-3">
-                        Xin chào, <span sec:authentication="name">Quản Trị Viên</span>
-                    </span>
-                    <form th:action="@{/logout}" method="post" class="d-inline">
-                        <button type="submit" class="btn btn-outline-light">
-                            <i class="fas fa-sign-out-alt me-1"></i> Đăng Xuất
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </div>
+        <form th:action="@{/logout}" method="post" class="d-flex ms-auto">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <span class="navbar-text me-3">Xin chào, <span sec:authentication="name"></span></span>
+            <button type="submit" class="btn btn-outline-light">Đăng xuất</button>
+        </form>
     </div>
 </nav>
 

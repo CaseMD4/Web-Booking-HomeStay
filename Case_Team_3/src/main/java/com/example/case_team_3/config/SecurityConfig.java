@@ -107,7 +107,7 @@ public class SecurityConfig {
                                     response.sendRedirect("/user/customerHome");
                                     break;
                                 default:
-                                    response.sendRedirect("/index");
+                                    response.sendRedirect("/login");
                             }
                         })
                         .failureUrl("/login?error=true")

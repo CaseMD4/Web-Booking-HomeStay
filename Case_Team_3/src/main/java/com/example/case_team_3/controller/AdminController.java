@@ -19,12 +19,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -188,7 +186,7 @@ public class AdminController {
         // Retrieve available rooms for customer view
         List<Room> availableRooms = roomService.getAllRooms();
         model.addAttribute("rooms", availableRooms);
-        return "all-rooms-by-customer-view";
+        return "all-rooms-by-customer-f-view";
     }
 
 

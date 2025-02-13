@@ -10,7 +10,7 @@ public class FrontController {
 
     @GetMapping("")
     public String home() {
-        return "index";
+        return "customerHome";
     }
 
 }

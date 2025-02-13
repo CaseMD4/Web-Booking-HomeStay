@@ -289,8 +289,8 @@ public class AdminController {
                              RedirectAttributes redirectAttributes) {
         try {
             userService.createUser(user);
-            redirectAttributes.addFlashAttribute("successMessage", "Tạo người dùng thành công");
-            return "redirect:/admin/all-users";
+            redirectAttributes.addFlashAttribute("errorMessage", "Tạo người dùng thành công");
+            return "redirect:/admin/create-user";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Lỗi: " + e.getMessage());
             return "redirect:/admin/create-user";

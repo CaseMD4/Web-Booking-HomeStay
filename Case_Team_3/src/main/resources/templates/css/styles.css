@@ -1,31 +1,112 @@
+/* General Layout */
 body {
-    background-color: #f8f9fa;
     font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
 }
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    margin-top: 20px;
 }
 
-.card {
-    border-radius: 12px;
-    padding: 20px;
+/* Notification Badge */
+.notification-badge {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 10px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Glowing Effect */
+.notification-badge.glowing {
+    animation: glow 1s infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px red;
+    }
+    to {
+        box-shadow: 0 0 20px red;
+    }
+}
+
+/* Notification List */
+.notification-list {
+    position: fixed;
+    top: 50px;
+    right: 10px;
+    width: 300px;
     background-color: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    display: none; /* Hidden by default */
 }
 
-h2 {
-    color: #dc3545;
+.notification-list.show {
+    display: block; /* Show when the badge is clicked */
 }
 
-.btn-primary {
+.notification-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.notification-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+}
+
+.notification-list li:last-child {
+    border-bottom: none;
+}
+
+.notification-list li:hover {
+    background-color: #f5f5f5;
+}
+
+/* Notification Details */
+.notification-details {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: none; /* Hidden by default */
+    padding: 20px;
+    margin-bottom: 20px; /* Add some space below */
+}
+
+.notification-details.show {
+    display: block; /* Show when a notification is clicked */
+}
+
+.notification-details h4 {
+    margin-top: 0;
+}
+
+.notification-details p {
+    margin-bottom: 5px;
+}
+
+.notification-details button {
     background-color: #007bff;
+    color: white;
     border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3;
+/* Logout Button */
+.d-flex.justify-content-between.mb-3 {
+    align-items: center; /* Vertically align items */
 }

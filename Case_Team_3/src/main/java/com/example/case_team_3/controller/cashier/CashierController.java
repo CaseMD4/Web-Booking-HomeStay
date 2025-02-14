@@ -1,14 +1,20 @@
 package com.example.case_team_3.controller.cashier;
 
+import com.example.case_team_3.model.Employee;
 import com.example.case_team_3.model.Room;
 import com.example.case_team_3.model.cashier.Invoice;
 import com.example.case_team_3.model.cashier.TransactionHistory;
+import com.example.case_team_3.model.chat.ChatRoom;
+import com.example.case_team_3.repository.EmployeeRepository;
 import com.example.case_team_3.service.cashier_and_cleaner.InvoiceService;
 import com.example.case_team_3.service.cashier_and_cleaner.RoomService;
+import com.example.case_team_3.service.chat.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +30,21 @@ public class CashierController {
     private RoomService roomService;
 @Autowired
 private InvoiceService invoiceService;
+    @Autowired
+    private ChatService chatService;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
     @GetMapping("")
     public String viewRooms(@RequestParam(required = false) String status, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String cashierUsername = authentication.getName();
+        Employee employee = employeeRepository.findByEmployeeUsername(cashierUsername);
+
+        List<ChatRoom> chatRooms = chatService.findChatRoomsForCashier(employee.getEmployeeId());
+
+        model.addAttribute("chatRooms", chatRooms);
+        model.addAttribute("cashierUsername", cashierUsername);
         model.addAttribute("rooms",roomService.getRoomsByStatus(status));
         model.addAttribute("filter", status);
         return "/cashier/cashierHome";

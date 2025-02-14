@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoomService {
@@ -78,7 +80,13 @@ public class RoomService {
 
             room.setRoomStatus(Room.RoomStatus.cleaning);
             roomRepository.save(room);
-            messagingTemplate.convertAndSend("/topic/cleaning", "Phòng " + room.getRoomId() + " cần dọn dẹp.");
+            
+            Map<String, Object> cleaningNotification = new HashMap<>();
+            cleaningNotification.put("roomId", room.getRoomId());
+            cleaningNotification.put("roomType", room.getRoomType().getRoomTypeName());
+            cleaningNotification.put("roomDescription", room.getRoomDescription());
+
+            messagingTemplate.convertAndSend("/topic/cleaning", cleaningNotification);
         }
     }
     public List<TransactionHistory> fetchTransactionHistory(Integer roomId) {

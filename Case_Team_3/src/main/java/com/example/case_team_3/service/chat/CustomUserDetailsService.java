@@ -1,4 +1,4 @@
-package com.example.case_team_3.service;
+package com.example.case_team_3.service.chat;
 
 import com.example.case_team_3.model.User;
 import com.example.case_team_3.model.Employee;
@@ -32,8 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + employee.getEmployeeRole().toString().toUpperCase()))
             );
         }
-
-        // Nếu không tìm thấy trong Employee, kiểm tra trong User
+        
         User user = userRepository.findByUserUsername(username);
         if (user != null) {
             return new org.springframework.security.core.userdetails.User(

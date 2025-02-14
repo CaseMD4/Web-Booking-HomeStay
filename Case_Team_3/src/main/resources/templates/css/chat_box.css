@@ -1,3 +1,4 @@
+/* Chat Box */
 .chat-box {
     position: fixed;
     bottom: 20px;
@@ -21,6 +22,7 @@
     text-align: center;
 }
 
+/* Chat Messages */
 .chat-messages {
     flex-grow: 1;
     overflow-y: auto;
@@ -34,7 +36,8 @@
     margin: 0;
 }
 
-.chat-messages li {
+/* Message Container */
+.chat-messages .message-container {
     display: flex;
     margin-bottom: 8px;
 }
@@ -47,12 +50,14 @@
     justify-content: flex-end;
 }
 
+/* Message */
 .chat-messages .message {
     max-width: 70%;
     padding: 10px;
     border-radius: 15px;
     font-size: 14px;
     line-height: 1.4;
+    position: relative;
 }
 
 .chat-messages .received .message {
@@ -67,6 +72,16 @@
     border-bottom-right-radius: 2px;
 }
 
+/* Message Time */
+.chat-messages .message-time {
+    position: absolute;
+    bottom: 2px;
+    right: 8px;
+    font-size: 0.8em;
+    color: #888;
+}
+
+/* Chat Input */
 .chat-input {
     display: flex;
     padding: 10px;
@@ -94,4 +109,23 @@
 
 .chat-input button:hover {
     background: #0056CC;
+}
+#toggleChatButton {
+    position: relative;
+    padding-right: 20px;
+}
+
+.notification {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.notification.show {
+    display: block;
 }

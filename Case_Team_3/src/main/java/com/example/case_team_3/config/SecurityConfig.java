@@ -1,6 +1,6 @@
 package com.example.case_team_3.config;
 
-import com.example.case_team_3.service.CustomUserDetailsService;
+import com.example.case_team_3.service.chat.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

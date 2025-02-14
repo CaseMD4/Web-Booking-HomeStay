@@ -1,0 +1,255 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>Quản Lý Nhân Viên</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
+<!--    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">-->
+<!--    <style>-->
+<!--        body {-->
+<!--            background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');-->
+<!--            background-size: cover;-->
+<!--            background-repeat: no-repeat;-->
+<!--            background-attachment: fixed;-->
+<!--            padding-top: 80px;-->
+<!--        }-->
+<!--        .card {-->
+<!--            background: rgba(255, 255, 255, 0.9);-->
+<!--            border: none;-->
+<!--            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);-->
+<!--            margin-bottom: 15px;-->
+<!--        }-->
+<!--        .navbar-brand img {-->
+<!--            max-height: 40px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Navbar &ndash;&gt;-->
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">-->
+<!--    <div class="container-fluid">-->
+<!--        <a class="navbar-brand" th:href="@{/admin/dashboard}">-->
+<!--            <i class="fas fa-home me-2"></i> Quản Lý Homestay-->
+<!--        </a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--            <ul class="navbar-nav me-auto">-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link active" th:href="@{/admin/all-employees}">-->
+<!--                        <i class="fas fa-users me-1"></i> >> Quản Lý Nhân Viên-->
+<!--                    </a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--            <ul class="navbar-nav">-->
+<!--                <li class="nav-item">-->
+<!--                    <span class="navbar-text me-3">-->
+<!--                        Xin chào, <span sec:authentication="name">Quản Trị Viên</span>-->
+<!--                    </span>-->
+<!--                    <form th:action="@{/logout}" method="post" class="d-inline">-->
+<!--                        <button type="submit" class="btn btn-outline-light">-->
+<!--                            <i class="fas fa-sign-out-alt me-1"></i> Đăng Xuất-->
+<!--                        </button>-->
+<!--                    </form>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<!--<div class="container mt-5">-->
+<!--    <div class="card">-->
+<!--        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">-->
+<!--            <h4 class="mb-0">Danh Sách Nhân Viên</h4>-->
+<!--            <div>-->
+<!--                <a th:href="@{/admin/create-employee}" class="btn btn-success me-2">-->
+<!--                    <i class="fas fa-plus me-1"></i> Thêm Nhân Viên-->
+<!--                </a>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="card-body">-->
+<!--            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">-->
+<!--                <i class="fas fa-check-circle me-2"></i>-->
+<!--                <span th:text="${successMessage}"></span>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--            </div>-->
+
+<!--            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">-->
+<!--                <i class="fas fa-exclamation-triangle me-2"></i>-->
+<!--                <span th:text="${errorMessage}"></span>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--            </div>-->
+
+<!--            <div class="table-responsive">-->
+<!--                <table class="table table-striped table-hover">-->
+<!--                    <thead class="table-dark">-->
+<!--                    <tr>-->
+<!--                        <th>ID</th>-->
+<!--                        <th>Tên Nhân Viên</th>-->
+<!--                        <th>Email</th>-->
+<!--                        <th>Vai Trò</th> &lt;!&ndash; Thêm cột Vai Trò &ndash;&gt;-->
+<!--                        <th class="text-center">Hành Động</th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody>-->
+<!--                    <tr th:each="employee : ${employees}">-->
+<!--                        <td th:text="${employee.employeeId}"></td>-->
+<!--                        <td th:text="${employee.employeeName}"></td>-->
+<!--                        <td th:text="${employee.employeeEmail}"></td>-->
+<!--                        <td th:text="${employee.employeeRole}"></td> &lt;!&ndash; Hiển thị Vai Trò &ndash;&gt;-->
+<!--                        <td class="text-center">-->
+<!--                            <div class="btn-group" role="group">-->
+<!--                                <a th:href="@{/admin/edit-employee/{id}(id=${employee.employeeId})}"-->
+<!--                                   class="btn btn-sm btn-warning me-1">-->
+<!--                                    <i class="fas fa-edit"></i>-->
+<!--                                </a>-->
+<!--                                <a th:href="@{/admin/delete-employee/{id}(id=${employee.employeeId})}"-->
+<!--                                   class="btn btn-sm btn-danger"-->
+<!--                                   onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')">-->
+<!--                                    <i class="fas fa-trash"></i>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </td>-->
+<!--                    </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Nhân Viên</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            padding-top: 80px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .navbar-brand img {
+            max-height: 40px;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/admin/dashboard}">
+            <i class="fas fa-home me-2"></i> Quản Lý Homestay
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/admin/all-employees}">
+                        <i class="fas fa-users me-1"></i> >> Quản Lý Nhân Viên
+                    </a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <span class="navbar-text me-3">Xin chào, <span sec:authentication="name">Quản Trị Viên</span></span>
+                    <form th:action="@{/logout}" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-outline-light">
+                            <i class="fas fa-sign-out-alt me-1"></i> Đăng Xuất
+                        </button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="card">
+
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">Danh Sách Nhân Viên</h4>
+            <div>
+                <a th:href="@{/admin/register-employee}" class="btn btn-success me-2">
+                    <i class="fas fa-plus me-1"></i> Thêm Nhân Viên
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <span th:text="${errorMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên Nhân Viên</th>
+                        <th>Email</th>
+                        <th>Vai Trò</th>
+                        <th class="text-center">Hành Động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="employee : ${employees}">
+                        <td th:text="${employee.employeeId}"></td>
+                        <td th:text="${employee.employeeName}"></td>
+                        <td th:text="${employee.employeeEmail}"></td>
+                        <td th:text="${employee.employeeRole}"></td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <!-- Kiểm tra nếu là admin với ID = 1 -->
+                                <th:block th:if="${employee.employeeId == 1}">
+                                    <span class="text-muted me-2">Tài khoản của bạn</span>
+                                    <a th:href="@{/admin/edit-employee/{id}(id=${employee.employeeId})}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Thay đổi thông tin của bạn
+                                    </a>
+                                </th:block>
+                                <!-- Nếu không phải admin -->
+                                <th:block th:unless="${employee.employeeId == 1}">
+                                    <a th:href="@{/admin/edit-employee/{id}(id=${employee.employeeId})}" class="btn btn-sm btn-warning me-1">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/admin/delete-employee/{id}(id=${employee.employeeId})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa nhân viên này?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </th:block>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

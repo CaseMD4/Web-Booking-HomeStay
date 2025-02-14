@@ -16,19 +16,40 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/cleaner")
 @PreAuthorize("hasRole('ROLE_CLEANER')")
 public class CleaningController {
+
+//    @todo cũ
+
+//    @Autowired
+//    private RoomService roomService;
+//    @GetMapping()
+//    public ModelAndView showRoom() {
+//        ModelAndView mav = new ModelAndView("/cleanerManagement/cleanerHome");
+//        mav.addObject("rooms", roomService.getRoomsByStatus(Room.RoomStatus.valueOf("cleaning")));
+//        return mav;
+//    }
+//    @PostMapping("/update")
+//    public String updateRoom(@RequestParam(value = "roomId", required = false) Integer roomId) {
+//        roomService.updateRoomStatusToAvailable(roomId);
+//        return "redirect:/cleaner-home";
+//    }
+
+
+//@todo mới
+
     @Autowired
     private RoomService roomService;
     @GetMapping()
     public ModelAndView showRoom() {
         ModelAndView mav = new ModelAndView("/cleanerManagement/cleanerHome");
-        mav.addObject("rooms", roomService.getRoomsByStatus(Room.RoomStatus.valueOf("cleaning")));
+        mav.addObject("rooms", roomService.getRoomsByStatus("cleaning"));
         return mav;
     }
     @PostMapping("/update")
     public String updateRoom(@RequestParam(value = "roomId", required = false) Integer roomId) {
-//        roomService.updateRoomStatusToAvailable(roomId);
+        roomService.updateRoomStatusToAvailable(roomId);
         return "redirect:/cleaner-home";
     }
+
 }
 
 

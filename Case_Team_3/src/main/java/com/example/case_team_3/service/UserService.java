@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
     @Autowired
@@ -13,6 +15,9 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     public User registerUser(User user) {
         // Kiểm tra username đã tồn tại chưa
@@ -37,5 +42,35 @@ public class UserService {
             return user;
         }
         throw new RuntimeException("Username hoặc mật khẩu không đúng!");
+    }
+    public void updateUser(Integer id, User userDetails) {
+        User existingUser = userRepository.findById(id).orElseThrow();
+
+        // Cập nhật thông tin
+        existingUser.setUserUsername(userDetails.getUserUsername());
+        existingUser.setUserEmail(userDetails.getUserEmail());
+
+        // Nếu có mật khẩu mới
+        if (userDetails.getUserPassword() != null && !userDetails.getUserPassword().isEmpty()) {
+            existingUser.setUserPassword(passwordEncoder.encode(userDetails.getUserPassword()));
+        }
+
+        userRepository.save(existingUser);
+    }
+
+    public void deleteUser(Integer id) {
+        User user = userRepository.findById(id).orElse(null);
+        userRepository.delete(user);
+    }
+
+    public void createUser(User user) {
+        if (userRepository.findByUserUsername(user.getUserUsername()) != null) {
+            throw new RuntimeException("Tên đăng nhập đã tồn tại");
+        }
+        if (userRepository.findByUserEmail(user.getUserEmail()) != null) {
+            throw new RuntimeException("Email đã được sử dụng");
+        }
+        user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+        userRepository.save(user);
     }
 }

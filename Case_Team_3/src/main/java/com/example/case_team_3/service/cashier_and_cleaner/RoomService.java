@@ -33,6 +33,9 @@ public class RoomService {
     private EntityManager entityManager;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+    public List<Room> findAll() {
+        return roomRepository.findAll();
+    }
     public List<Room> getRoomsByStatus(String status) {
 
         if (status == null || status.isEmpty()) {

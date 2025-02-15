@@ -58,6 +58,9 @@ public class SecurityConfig {
                         case "ROLE_CLEANER":
                             response.sendRedirect("/cleaner-home");
                             break;
+                        case "ROLE_USER":
+                            response.sendRedirect("/user/customerHome");
+                            break;
                         default:
                             response.sendRedirect("/index");
                     }

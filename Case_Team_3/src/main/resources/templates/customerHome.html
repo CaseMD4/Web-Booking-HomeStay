@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+    <link rel="stylesheet" th:href="@{/static/css/chat_box.css}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Hotel Management</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li>
+                    <a class="nav-link active" href="/user">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/list-rooms">Danh sách phòng</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/bookings">Đặt phòng</a>
+                </li>
+            </ul>
+            <div class="d-flex">
+                    <span class="navbar-text me-3" sec:authorize="isAuthenticated()">
+                        Xin chào, <span th:text="${username}"></span>
+                    </span>
+                <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()">
+                    <button type="submit" class="btn btn-outline-light">Đăng xuất</button>
+                </form>
+                <a href="/login" class="btn btn-outline-light" sec:authorize="!isAuthenticated()">Đăng nhập</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container mt-4">
+    <div class="jumbotron" style="color: white">
+        <h1 class="display-4">Chào mừng đến với Hotel Management</h1>
+        <p class="lead">Hệ thống quản lý khách sạn hiện đại và tiện lợi</p>
+        <hr class="my-4">
+        <p>Bạn có thể dễ dàng đặt phòng, xem thông tin và quản lý các dịch vụ của chúng tôi.</p>
+    </div>
+</div>
+<div class="chat-container">
+    <div id="chatBox" class="chat-box">
+        <div class="chat-header" onclick="toggleChatBox()">
+            <h4>Hộp Chat</h4>
+            <div class="notification"></div>
+        </div>
+        <div class="chat-messages">
+            <ul id="chat-messages">
+            </ul>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="content" placeholder="Nhập tin nhắn...">
+            <button onclick="sendMessage()">Gửi</button>
+        </div>
+    </div>
+    <button id="toggleChatButton" onclick="toggleChatBox()">
+        Hộp Chat
+        <div class="notification"></div>
+    </button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script th:inline="javascript">
+    let socket = new SockJS('/ws-chat');
+    let stompClient = Stomp.over(socket);
+    let userId =  /*[[${username}]]*/'';
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe('/topic/chat.' + userId, function (message) {
+            let toggleChatButton = document.getElementById("toggleChatButton");
+            let chatHeader = document.querySelector(".chat-header");
+            toggleChatButton.classList.add("notification");
+            chatHeader.classList.add("notification");
+            showMessage(JSON.parse(message.body));
+        });
+    });
+
+    function sendMessage() {
+        console.log("sendMessage() called");
+        let content = document.getElementById("content").value;
+        let message = {
+            content: content,
+            senderType: 'user',
+            sender: userId
+        };
+        console.log("Sending message:", message);
+        stompClient.send("/app/chat.send", {}, JSON.stringify(message));
+        document.getElementById("content").value = "";
+    }
+
+    function showMessage(message) {
+        let chatBox = document.getElementById("chat-messages");
+        let li = document.createElement("li");
+        let div = document.createElement("div");
+
+        div.classList.add("message");
+
+        if (message.senderType === 'user') {
+            div.innerHTML = "<p><strong>You said:</strong> " + message.content + "</p><span class='message-time'>" + getCurrentTime() + "</span>";
+            li.classList.add("message-container", "sent");
+            div.classList.add("sent");
+        }
+        else {
+            div.innerHTML = "<p><strong>" + message.sender + ":</strong> " + message.content + "</p><span class='message-time'>" + getCurrentTime() + "</span>";
+            li.classList.add("message-container", "received");
+            div.classList.add("received");
+        }
+
+
+        li.appendChild(div);
+        chatBox.appendChild(li);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function toggleChatBox() {
+        let chatBox = document.getElementById("chatBox");
+        let toggleChatButton = document.getElementById("toggleChatButton");
+        let chatHeader = document.querySelector(".chat-header");
+
+        if (chatBox.style.display === "none") {
+            chatBox.style.display = "block";
+            toggleChatButton.style.display = "none";
+            toggleChatButton.classList.remove("notification");
+            chatHeader.classList.remove("notification");
+        } else {
+            chatBox.style.display = "none";
+            toggleChatButton.style.display = "block";
+            toggleChatButton.classList.remove("notification");
+            chatHeader.classList.remove("notification");
+        }
+    }
+
+    function getCurrentTime() {
+        let now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let ampm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        let strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    }
+</script>
+</body>
+</html>

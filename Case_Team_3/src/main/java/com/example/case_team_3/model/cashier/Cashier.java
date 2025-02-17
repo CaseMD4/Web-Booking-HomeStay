@@ -1,7 +1,7 @@
 package com.example.case_team_3.model.cashier;
 
 import com.example.case_team_3.model.Employee;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
 import lombok.Data;
 
 

@@ -13,6 +13,6 @@ public class HomeController {
         if (authentication != null) {
             model.addAttribute("username", authentication.getName());
         }
-        return "index";
+        return "customerHome";
     }
 }

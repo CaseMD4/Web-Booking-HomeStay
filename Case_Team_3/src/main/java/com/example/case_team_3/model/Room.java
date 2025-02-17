@@ -30,6 +30,15 @@ public class Room {
     private List<Booking> bookings;
 
     public enum RoomStatus {
-        available, booked, cleaning
+        available, booked, cleaning,dirty
+    }
+    @Override
+    public String toString() {
+        return "Room{" +
+                "roomId=" + roomId +
+                ", roomDescription='" + roomDescription + '\'' +
+                ", roomPrice=" + roomPrice +
+                ", roomStatus=" + roomStatus +
+                '}';
     }
 }

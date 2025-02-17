@@ -1,0 +1,121 @@
+body {
+    display: flex;
+    flex-direction: column;
+    background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.chat-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000; /* Đảm bảo nó ở trên cùng */
+}
+
+.chat-box {
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: none; /* Ẩn hộp chat mặc định */
+}
+
+.chat-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    cursor: pointer; /* Thay đổi con trỏ chuột khi hover */
+    display: flex; /* Để căn chỉnh nội dung header */
+    justify-content: space-between; /* Để đẩy notification về bên phải */
+    align-items: center; /* Để căn chỉnh theo chiều dọc */
+}
+
+.chat-messages {
+    padding: 10px;
+    height: 200px;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+
+.chat-input {
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    display: flex;
+    align-items: center; /* Căn chỉnh theo chiều dọc */
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 5px;
+}
+
+.chat-input button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    height: 30px;
+    width: 70px;
+}
+
+.message-container {
+    margin-bottom: 5px;
+}
+
+.message {
+    padding: 8px;
+    border-radius: 5px;
+}
+.message p {
+    margin: 0;
+}
+.sent {
+    background-color: #e2f7cb;
+    text-align: right;
+}
+
+.received {
+    background-color: #f0f0f0;
+    text-align: left;
+}
+
+.message-time {
+    font-size: 0.8em;
+    color: #777;
+}
+
+/* Style cho nút thông báo */
+.notification {
+    display: inline-block;
+    background-color: red;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+
+#toggleChatButton {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 999;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}

@@ -5,69 +5,176 @@
     <meta charset="UTF-8">
     <title>Admin Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .navbar {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .content {
+            flex: 1 0 auto;
+        }
+
+
+
+        .navbar .nav-link, .navbar .navbar-brand {
+            color: #ffffff;
+        }
+
+        .footer {
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
+            color: #ffffff;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s; /* Smooth transition */
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Scale effect on hover */
+        }
+
+        .card-title {
+            color: #007bff;
+        }
+
+        .btn-primary {
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+
+        .alert {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">Admin Dashboard</a>
-            <div class="collapse navbar-collapse">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/register-employee">Tạo tài khoản nhân viên</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/manage-rooms">Quản lý phòng</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/admin/manage-users">Quản lý người dùng</a>
-                    </li>
-                </ul>
-                <form th:action="@{/logout}" method="post" class="d-flex">
-                    <span class="navbar-text me-3">
-                        Xin chào, <span sec:authentication="name"></span>
-                    </span>
-                    <button type="submit" class="btn btn-outline-light">Đăng xuất</button>
-                </form>
-            </div>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/admin/dashboard">
+            <i class="fas fa-home"></i> Admin Dashboard
+        </a>
+        <form th:action="@{/logout}" method="post" class="d-flex ms-auto">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <span class="navbar-text me-3">Xin chào, <span sec:authentication="name"></span></span>
+            <button type="submit" class="btn btn-outline-light">Đăng xuất</button>
+        </form>
+    </div>
+</nav>
 
-    <div class="container mt-4">
-        <div th:if="${param.employeeCreated}" class="alert alert-success">
-            Tạo tài khoản nhân viên thành công!
+<!-- Main Content -->
+<div class="container mt-4">
+    <div th:if="${param.employeeCreated}" class="alert alert-success">
+        Tạo tài khoản nhân viên thành công!
+    </div>
+    <div class="row mt-4">
+
+        <div class="col-md-4 mb-4"> <!-- Add margin bottom for spacing -->
+            <a href="/admin/all-rooms" class="card text-decoration-none"> <!-- Wrap in anchor -->
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý phòng</h5>
+                    <p class="card-text">Thêm, sửa, xóa thông tin phòng</p>
+                </div>
+            </a>
         </div>
-        <h2>Quản lý hệ thống</h2>
-        <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Quản lý nhân viên</h5>
-                        <p class="card-text">Tạo và quản lý tài khoản nhân viên</p>
-                        <a href="/admin/register-employee" class="btn btn-primary">Tạo tài khoản mới</a>
-                    </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/admin/all-users" class="card text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý người dùng</h5>
+                    <p class="card-text">Xem và quản lý tài khoản người dùng</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Quản lý phòng</h5>
-                        <p class="card-text">Thêm, sửa, xóa thông tin phòng</p>
-                        <a href="/admin/manage-rooms" class="btn btn-primary">Quản lý phòng</a>
-                    </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/admin/all-employees" class="card text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title">Quản lý nhân viên</h5>
+                    <p class="card-text">Tạo và quản lý tài khoản nhân viên</p>
                 </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Quản lý người dùng</h5>
-                        <p class="card-text">Xem và quản lý tài khoản người dùng</p>
-                        <a href="/admin/manage-users" class="btn btn-primary">Quản lý người dùng</a>
-                    </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/admin/abc" class="card text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title">Quản Lý Email</h5>
+                    <p class="card-text">Xem chỉnh sửa email</p>
                 </div>
-            </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/admin/abcd" class="card text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title">Quản Lý Giao Diện</h5>
+                    <p class="card-text">Xem chỉnh sửa giao diện</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/admin/abcd" class="card text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title">Quản Lý Tin Nhắn</h5>
+                    <p class="card-text">Xem chỉnh sửa tin nhắn</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <a href="/admin/abcd" class="card text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title">Quản Lý Doanh Thu</h5>
+                    <p class="card-text">Xem Doanh Thu</p>
+                </div>
+            </a>
         </div>
     </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Footer -->
+<footer class="footer mt-auto py-3 text-center">
+    <div class="container">
+        <p>
+            &copy; 2025 Homestay Booking. Bảo lưu mọi quyền.
+        </p>
+        <p>
+            <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>or  Liên hệ:
+            <a href="mailto:info@homestaybooking.com" class="text-white">info@homestaybooking.com</a>
+        </p>
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

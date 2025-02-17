@@ -2,6 +2,7 @@ package com.example.case_team_3.service;
 
 import com.example.case_team_3.model.User;
 import com.example.case_team_3.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,8 +16,14 @@ public class UserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public User findById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Không tìm thấy người dùng"));
     }
 
     public User registerUser(User user) {
@@ -43,8 +50,10 @@ public class UserService {
         }
         throw new RuntimeException("Username hoặc mật khẩu không đúng!");
     }
+
+
     public void updateUser(Integer id, User userDetails) {
-        User existingUser = userRepository.findById(id).orElseThrow();
+        User existingUser = findById(id);
 
         // Cập nhật thông tin
         existingUser.setUserUsername(userDetails.getUserUsername());
@@ -59,7 +68,7 @@ public class UserService {
     }
 
     public void deleteUser(Integer id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = findById(id);
         userRepository.delete(user);
     }
 

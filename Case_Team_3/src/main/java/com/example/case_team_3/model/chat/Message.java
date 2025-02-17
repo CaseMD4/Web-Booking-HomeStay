@@ -21,6 +21,7 @@ public class Message {
     private String receiver;
     private String content;
     private LocalDateTime timestamp;
+    private Integer userId;
     private Boolean isReply;
 
     @Enumerated(EnumType.STRING)

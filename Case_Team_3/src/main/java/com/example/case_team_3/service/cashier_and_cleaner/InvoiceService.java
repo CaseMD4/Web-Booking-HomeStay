@@ -25,7 +25,7 @@ public class InvoiceService {
 
             for (TransactionHistory transaction : invoice.getTransactions()) {
                 document.add(new Paragraph("Ngày: " + transaction.getTransactionTime()));
-                document.add(new Paragraph("Số tiền: " + invoice.getTotalAmount() + " VNĐ"));
+                document.add(new Paragraph("Số tiền: " + transaction.getAmountPaid() + " VNĐ"));
                 document.add(new Paragraph("--------------------------------"));
             }
 

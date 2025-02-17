@@ -39,9 +39,12 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.0'
-    implementation 'com.itextpdf:itext7-core:7.2.2'
+
     // Thư viện gửi mail
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'com.sun.mail:javax.mail:1.6.2'
+
+    implementation 'com.itextpdf:itext7-core:7.1.15' // Check for the latest version
 }
 
 tasks.named('test') {

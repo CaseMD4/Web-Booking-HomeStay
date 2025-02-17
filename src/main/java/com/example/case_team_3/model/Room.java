@@ -14,6 +14,8 @@ public class Room {
 
     private String roomImg;
 
+    private String roomCode;
+
     @ManyToOne
     @JoinColumn(name = "roomType_id")
     private RoomType roomType;
@@ -32,6 +34,11 @@ public class Room {
     public enum RoomStatus {
         available, booked, cleaning,dirty
     }
+
+
+
+
+
     @Override
     public String toString() {
         return "Room{" +

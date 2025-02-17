@@ -13,9 +13,25 @@
             <h4 class="mb-0">Chỉnh Sửa Thông Tin Phòng</h4>
         </div>
         <div class="card-body">
-            <form th:action="@{/admin/edit-room/{id}(id=${room.roomId})}" th:object="${room}" method="post" enctype="multipart/form-data">
+            <form th:action="@{/admin/edit-room/{id}(id=${room.roomId})}" th:object="${room}" method="post"
+                  enctype="multipart/form-data">
                 <!-- CSRF Token -->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+                <div class="mb-3 row">
+                    <div class="col-md-6">
+                        <label for="roomImg" class="form-label">Hình Ảnh Phòng</label>
+                        <input type="file" class="form-control" id="roomImg" name="imgFiles" multiple>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="roomCode" class="form-label">Mã Phòng</label>
+                        <input type="text" class="form-control" id="roomCode" th:field="*{roomCode}" required>
+                    </div>
+                </div>
+
+
+
+
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -53,10 +69,6 @@
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="roomImg" class="form-label">Hình Ảnh Phòng</label>
-                    <input type="file" class="form-control" id="roomImg" name="imgFiles" multiple>
-                </div>
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                     <a th:href="@{/admin/all-rooms}" class="btn btn-secondary me-md-2">

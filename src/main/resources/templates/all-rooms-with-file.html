@@ -54,6 +54,7 @@
                         <thead>
                         <tr>
                             <th>Ảnh Phòng</th>
+                            <th>Mã Phòng</th>
                             <th>Mô Tả Phòng</th>
                             <th>Loại Phòng</th>
                             <th>Trạng Thái</th>
@@ -75,6 +76,14 @@
 
                             </td>
 
+
+                            <td>
+                                <span th:if="${room.roomCode}" th:text="${room.roomCode}"></span>
+                                <button th:unless="${room.roomCode}">Chưa có</button>
+                            </td>
+
+
+
                             <td th:text="${room.roomDescription}"></td>
                             <td th:text="${room.roomType.roomTypeName}"></td>
                             <td>
@@ -90,7 +99,7 @@
                             <td>
                                 <div class="dropdown mb-2">
                                     <button class="btn btn-sm btn-info dropdown-toggle" type="button" id="statusDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Đổi Trạng Thái
+                                         Đổi Trạng Thái
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="statusDropdown">
                                         <li><a class="dropdown-item" href="#" th:onclick="'changeRoomStatus(' + ${room.roomId} + ', \'available\')'">
@@ -106,10 +115,13 @@
                                             <i class="fas fa-trash text-danger me-2"></i>Bẩn
                                         </a></li>
                                     </ul>
-                                </div>
-                                <div>
                                     <a th:href="@{/admin/edit-room/{id}(id=${room.roomId})}" class="btn btn-sm btn-warning me-1">
                                         <i class="fas fa-edit me-1"></i>Sửa
+                                    </a>
+                                </div>
+                                <div>
+                                    <a th:href="@{/admin/image-details/{id}(id=${room.roomId})}" class="btn btn-sm btn-secondary me-1">
+                                        <i class="fas fa-image me-1"></i> Chi Tiết Phòng
                                     </a>
                                     <a th:href="@{/admin/delete-room/{id}(id=${room.roomId})}" class="btn btn-sm btn-danger">
                                         <i class="fas fa-trash me-1"></i>Xóa

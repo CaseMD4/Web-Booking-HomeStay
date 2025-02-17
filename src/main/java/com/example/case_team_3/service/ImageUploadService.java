@@ -32,11 +32,16 @@ public class ImageUploadService {
                 // Lưu đường dẫn tương đối để hiển thị ảnh
                 filePaths.add("/uploads/" + file.getOriginalFilename());
             }
+
+
+
         } catch (IOException e) {
             e.printStackTrace();
             return "Error uploading files";
         }
         return String.join(", ", filePaths);
     }
+
+
 }
 

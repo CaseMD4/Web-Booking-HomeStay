@@ -104,7 +104,7 @@ public class SecurityConfig {
                                     response.sendRedirect("/cleaner");
                                     break;
                                 case "ROLE_USER":
-                                    response.sendRedirect("/user/customerHome");
+                                    response.sendRedirect("/user/userHome");
                                     break;
                                 default:
                                     response.sendRedirect("/login");

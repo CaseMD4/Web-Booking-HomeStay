@@ -112,6 +112,8 @@ public class RoomService {
         existingRoom.setRoomPrice(roomDetails.getRoomPrice());
         existingRoom.setRoomStatus(roomDetails.getRoomStatus());
         existingRoom.setRoomImg(roomDetails.getRoomImg());
+        existingRoom.setRoomCode(roomDetails.getRoomCode());
+
 
         roomRepository.save(existingRoom);
     }

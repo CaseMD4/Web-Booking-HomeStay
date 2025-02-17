@@ -14,16 +14,19 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
         }
+
         .main-content {
             margin-left: 250px;
             padding: 20px;
             flex: 1;
         }
+
         .card {
             background: rgba(255, 255, 255, 0.9);
             border: none;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .navbar {
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0));
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -55,16 +58,25 @@
                         <h4 class="mb-0">Tạo Phòng Mới</h4>
                     </div>
                     <div class="card-body">
-                        <form th:action="@{/admin/create-room}" method="post" th:object="${room}" enctype="multipart/form-data">
+                        <form th:action="@{/admin/create-room}" method="post" th:object="${room}"
+                              enctype="multipart/form-data">
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="roomImg" class="form-label">Ảnh Phòng</label>
-                                    <input type="file" class="form-control" id="roomImg" name="imgFiles" multiple required accept=".jpg, .png">
+                                    <input type="file" class="form-control" id="roomImg" name="imgFiles" multiple
+                                           required accept=".jpg, .png">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="roomCode" class="form-label">Mã Phòng</label>
+                                    <textarea class="form-control" id="roomCode" th:field="*{roomCode}"
+                                              rows="3" placeholder="Mã Phòng"></textarea>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label for="roomPrice" class="form-label">Giá Phòng</label>
-                                    <input type="number" class="form-control" id="roomPrice" th:field="*{roomPrice}" placeholder="Giá phòng" step="0.01" required>
+                                    <input type="number" class="form-control" id="roomPrice" th:field="*{roomPrice}"
+                                           placeholder="Giá phòng" step="0.01" required>
                                 </div>
                             </div>
 
@@ -79,45 +91,51 @@
                                                     th:text="${type.roomTypeName}">
                                             </option>
                                         </select>
-                                        <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#createRoomTypeModal">
+                                        <button class="btn btn-success" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#createRoomTypeModal">
                                             <i class="fas fa-plus"></i>
                                         </button>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="newRoomType" class="form-label">Hoặc Nhập Loại Phòng Mới</label>
-                                    <input type="text" class="form-control" id="newRoomType" name="newRoomTypeName" placeholder="Tên loại phòng mới">
+                                    <input type="text" class="form-control" id="newRoomType" name="newRoomTypeName"
+                                           placeholder="Tên loại phòng mới">
                                 </div>
                             </div>
 
-                            <div class="modal fade" id="createRoomTypeModal" tabindex="-1" aria-labelledby="createRoomTypeModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="createRoomTypeModal" tabindex="-1"
+                                 aria-labelledby="createRoomTypeModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="createRoomTypeModalLabel">Tạo Loại Phòng Mới</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            <h5 class="modal-title" id="createRoomTypeModalLabel">Tạo Loại Phòng
+                                                Mới</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="mb-3">
                                                 <label for="modalRoomTypeName" class="form-label">Tên Loại Phòng</label>
-                                                <input type="text" class="form-control" id="modalRoomTypeName" placeholder="Nhập tên loại phòng">
+                                                <input type="text" class="form-control" id="modalRoomTypeName"
+                                                       placeholder="Nhập tên loại phòng">
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                                            <button type="button" class="btn btn-primary" id="saveRoomTypeBtn">Lưu</button>
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                Hủy
+                                            </button>
+                                            <button type="button" class="btn btn-primary" id="saveRoomTypeBtn">Lưu
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-
-
-
-
                             <div class="mb-3">
                                 <label for="roomDescription" class="form-label">Mô Tả Phòng</label>
-                                <textarea class="form-control" id="roomDescription" th:field="*{roomDescription}" rows="3" placeholder="Mô tả chi tiết về phòng"></textarea>
+                                <textarea class="form-control" id="roomDescription" th:field="*{roomDescription}"
+                                          rows="3" placeholder="Mô tả chi tiết về phòng"></textarea>
                             </div>
 
                             <div class="d-grid">
@@ -131,7 +149,7 @@
     </div>
 </div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const saveRoomTypeBtn = document.getElementById('saveRoomTypeBtn');
         const modalRoomTypeName = document.getElementById('modalRoomTypeName');
         const roomTypeSelect = document.getElementById('roomType');
@@ -140,7 +158,7 @@
         const token = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const header = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-        saveRoomTypeBtn.addEventListener('click', function() {
+        saveRoomTypeBtn.addEventListener('click', function () {
             const roomTypeName = modalRoomTypeName.value.trim();
 
             if (!roomTypeName) {
@@ -155,11 +173,13 @@
                     'Content-Type': 'application/json',
                     [header]: token
                 },
-                body: JSON.stringify({ roomTypeName: roomTypeName })
+                body: JSON.stringify({roomTypeName: roomTypeName})
             })
                 .then(response => {
                     if (!response.ok) {
-                        return response.json().then(err => { throw new Error(err.error || 'Lỗi khi tạo loại phòng'); });
+                        return response.json().then(err => {
+                            throw new Error(err.error || 'Lỗi khi tạo loại phòng');
+                        });
                     }
                     return response.json();
                 })

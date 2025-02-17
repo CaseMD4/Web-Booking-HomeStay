@@ -1,0 +1,223 @@
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Hình Ảnh Chi Tiết</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .content {
+            flex: 1 0 auto;
+        }
+
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .add-image-btn {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            display: none;
+        }
+
+        .image-wrapper:hover .add-image-btn {
+            display: flex;
+        }
+
+        #mainImage {
+            height: 320px; /* Fixed height */
+            width: 530px; /* Fixed width */
+            object-fit: cover; /* Ensures the image covers the container without distortion */
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <div class="d-flex flex-column">
+            <a class="navbar-brand" href="/admin/dashboard">
+                <i class="fas fa-home"></i> Admin Dashboard
+            </a>
+        </div>
+        <form th:action="@{/logout}" method="post" class="d-flex ms-auto">
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            <span class="navbar-text me-3">Xin chào, <span sec:authentication="name"></span></span>
+            <button type="submit" class="btn btn-outline-light">Đăng xuất</button>
+        </form>
+    </div>
+</nav>
+
+<div class="bg-white text-gray-800 bg-opacity-90 p-4 rounded-lg m-4">
+    <div class="container mx-auto p-4">
+        <div class="flex flex-col md:flex-row">
+            <!--                    <img th:if="${room.roomImg != null}"-->
+            <!--                         th:src="@{/uploads/{filename}(filename=${#strings.substringAfter(room.roomImg, 'uploads/')})}"-->
+            <!--                         alt="Thumbnail of the hotel room" class="w-1/5" height="100" width="100"/>-->
+
+            <!-- Left Column: Room Images -->
+            <div class="md:w-1/2">
+                <img id="mainImage" alt="A luxurious hotel room with a large bed and modern decor" class="w-full mb-4"
+                     src="https://storage.googleapis.com/a1aa/image/pEu4PbdEXILphu9rd1hDC2xgi11pr_KJRaE4_rJ5BAk.jpg"/>
+
+                <!--                <div class="flex space-x-2">-->
+                <!--                    <img onclick="changeImage(this)" alt="Thumbnail of the hotel room" class="thumbnail" height="100"-->
+                <!--                         src="https://bedental.vn/wp-content/uploads/2022/12/Anh-Avatar-Doremon-dep-ngau-cute.jpg"-->
+                <!--                         width="100"/>-->
+                <!--                    <img onclick="changeImage(this)" alt="Thumbnail of the hotel room" class="thumbnail" height="100"-->
+                <!--                         src="https://cafefcdn.com/203337114487263232/2023/3/10/photo-1-1678418195082845728288.jpg"-->
+                <!--                         width="100"/>-->
+                <!--                    <img onclick="changeImage(this)" alt="Thumbnail of the hotel room" class="thumbnail" height="100"-->
+                <!--                         src="https://haycafe.vn/wp-content/uploads/2021/11/hinh-anh-xuka-e-then.jpg"-->
+                <!--                         width="100"/>-->
+                <!--                    <img onclick="changeImage(this)" alt="Thumbnail of the hotel room" class="thumbnail" height="100"-->
+                <!--                         src="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474066yrl/hinh-anh-chaien-cuc-dep_105739415.jpg"-->
+                <!--                         width="100"/>-->
+                <!--                    <img onclick="changeImage(this)" alt="Thumbnail of the hotel room" class="thumbnail" height="100"-->
+                <!--                         src="https://cdn.popsww.com/blog/sites/2/2021/03/nobita-khoc-loc-1920x1080.jpg"-->
+                <!--                         width="100"/>-->
+                <!--                </div>-->
+                <div class="flex space-x-2">
+                    <img id="thumb-0" onclick="changeImage(this, 0)" alt="Thumbnail" class="thumbnail" src=""
+                         width="100"/>
+                    <img id="thumb-1" onclick="changeImage(this, 1)" alt="Thumbnail" class="thumbnail" src=""
+                         width="100"/>
+                    <img id="thumb-2" onclick="changeImage(this, 2)" alt="Thumbnail" class="thumbnail" src=""
+                         width="100"/>
+                    <img id="thumb-3" onclick="changeImage(this, 3)" alt="Thumbnail" class="thumbnail" src=""
+                         width="100"/>
+                    <img id="thumb-4" onclick="changeImage(this, 4)" alt="Thumbnail" class="thumbnail" src=""
+                         width="100"/>
+                </div>
+            </div>
+            <!-- Right Column: Room Details -->
+            <div class="md:w-1/2 md:pl-8">
+                <h1 class="text-2xl font-bold mb-2">
+                    Luxurious Hotel Room
+                </h1>
+                <div class="flex items-center mb-2">
+                    <span class="text-yellow-500 text-lg">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="text-yellow-500 text-lg">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="text-yellow-500 text-lg">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="text-yellow-500 text-lg">
+                        <i class="fas fa-star"></i>
+                    </span>
+                    <span class="text-yellow-500 text-lg">
+                        <i class="fas fa-star-half-alt"></i>
+                    </span>
+                    <span class="ml-2 text-gray-600">
+                        4.7
+                    </span>
+                    <span class="ml-2 text-gray-600">
+                        1,234 Reviews
+                    </span>
+                </div>
+                <div class="text-3xl font-bold text-red-500 mb-2">
+                    $199.00
+                    <span class="text-gray-500 line-through">
+                        $299.00
+                    </span>
+                    <span class="text-red-500">
+                        -33%
+                    </span>
+                </div>
+                <div class="text-gray-600 mb-2">
+                    Description
+                </div>
+                <p class="text-gray-600 mb-4">
+                    Enjoy a luxurious stay in our modern hotel room equipped with all the amenities you need for a
+                    comfortable and relaxing stay. The room features a large bed, modern decor, and a stunning view of
+                    the city.
+                </p>
+                <div class="flex space-x-4">
+                    <button class="bg-orange-500 text-white py-2 px-4 rounded">
+                        Add to Favorites
+                    </button>
+                    <button class="bg-red-500 text-white py-2 px-4 rounded">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    const imageUrls = [
+        "https://bedental.vn/wp-content/uploads/2022/12/Anh-Avatar-Doremon-dep-ngau-cute.jpg",
+        "https://cafefcdn.com/203337114487263232/2023/3/10/photo-1-1678418195082845728288.jpg",
+        "", // Ảnh trống để test thêm mới
+        "https://haycafe.vn/wp-content/uploads/2021/11/hinh-anh-xuka-e-then.jpg",
+        "https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474066yrl/hinh-anh-chaien-cuc-dep_105739415.jpg"
+    ];
+
+    function changeImage(img, index) {
+        const mainImage = document.getElementById('mainImage');
+
+        if (imageUrls[index]) {
+            mainImage.src = imageUrls[index];
+        } else {
+            const imageUrl = prompt("Nhập URL ảnh:");
+            if (imageUrl) {
+                imageUrls[index] = imageUrl;
+                mainImage.src = imageUrl;
+                document.getElementById(`thumb-${index}`).src = imageUrl;
+            }
+        }
+    }
+
+
+    // Gán đường dẫn ảnh vào các thẻ img khi trang load
+    document.addEventListener("DOMContentLoaded", function () {
+        for (let i = 0; i < imageUrls.length; i++) {
+            const imgElement = document.getElementById(`thumb-${i}`);
+            if (imgElement) {
+                imgElement.src = imageUrls[i] || "https://cdn-icons-png.flaticon.com/512/190/190737.png";
+            }
+        }
+    });
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

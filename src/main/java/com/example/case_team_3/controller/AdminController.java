@@ -4,10 +4,8 @@ import com.example.case_team_3.model.Employee;
 import com.example.case_team_3.model.Room;
 import com.example.case_team_3.model.RoomType;
 import com.example.case_team_3.model.User;
-import com.example.case_team_3.service.EmployeeService;
-import com.example.case_team_3.service.ImageUploadService;
-import com.example.case_team_3.service.RoomService;
-import com.example.case_team_3.service.UserService;
+import com.example.case_team_3.model.ImageRoomDetail;
+import com.example.case_team_3.service.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +41,21 @@ public class AdminController {
     @Autowired
     private ImageUploadService imgUploadService;
 
+    @Autowired
+    private ImageRoomDetailService imageRoomDetailService;
+
+
+    @GetMapping("/image-details/{id}")
+    public String showImageDetails(@PathVariable Long id, Model model) {
+        List<ImageRoomDetail> images = imageRoomDetailService.findAllDetailImageByRoomId(id);
+        model.addAttribute("images", images);
+        Room room = roomService.getRoomById(Math.toIntExact(id));
+        model.addAttribute("room", room);
+
+        System.out.println(room.toString());
+        return "room-details-by-admin";
+    }
+
 
     @GetMapping("/edit-room/{id}")
     public String showEditRoomForm(@PathVariable Long id, Model model) {
@@ -64,7 +77,7 @@ public class AdminController {
     @PostMapping("/edit-room/{id}")
     public String updateRoom(@PathVariable Long id,
                              @ModelAttribute("room") Room roomDetails,
-                             @RequestParam(required = false) MultipartFile[] imgFiles, // Thêm tham số cho tệp hình ảnh
+                             @RequestParam(required = false) MultipartFile[] imgFiles,
                              BindingResult bindingResult,
                              Model model) {
         // Validate room details
@@ -74,11 +87,16 @@ public class AdminController {
         }
 
         try {
+
             // Nếu có tệp hình ảnh được tải lên, xử lý việc lưu hình ảnh
             if (imgFiles != null && imgFiles.length > 0) {
                 String imagePaths = imgUploadService.uploadImages(imgFiles);
                 // Cập nhật đường dẫn hình ảnh vào đối tượng roomDetails
                 roomDetails.setRoomImg(imagePaths); // Giả sử roomDetails có phương thức setRoomImg
+            } else {
+                // Không có hình ảnh mới, giữ nguyên hình ảnh hiện tại
+                Room existingRoom = roomService.getRoomById(Math.toIntExact(id));
+                roomDetails.setRoomImg(existingRoom.getRoomImg());
             }
 
             // Cập nhật thông tin phòng
@@ -90,6 +108,8 @@ public class AdminController {
             return "edit-room-with-file";
         }
     }
+
+
 
     // Delete Room Method
     @GetMapping("/delete-room/{id}")
@@ -362,4 +382,7 @@ public class AdminController {
         }
         return "redirect:/admin/all-employees";
     }
+
+
+
 }

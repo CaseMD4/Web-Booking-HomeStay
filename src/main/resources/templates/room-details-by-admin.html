@@ -82,6 +82,27 @@
         .next {
             right: 0;
         }
+
+        /* form edit ảnh */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -108,30 +129,22 @@
                          alt="Room Image"
                          class="w-full mb-4"
                     ><span th:if="${room.roomImg == null}" class="text-muted">Không có ảnh</span>
+
                 </div>
 
                 <div class="slider-container">
+
+
                     <button class="nav-button prev" onclick="moveLeft()">&#10094;</button>
                     <div class="image-track">
 
-
-
-
-
-                        <img id="thumb-0" onclick="changeImage(this, 0)" alt="Thumbnail" class="thumbnail"
-                             src="https://bedental.vn/wp-content/uploads/2022/12/Anh-Avatar-Doremon-dep-ngau-cute.jpg"/>
-                        <img id="thumb-1" onclick="changeImage(this, 1)" alt="Thumbnail" class="thumbnail"
-                             src="https://cafefcdn.com/203337114487263232/2023/3/10/photo-1-1678418195082845728288.jpg"/>
-                        <img id="thumb-2" onclick="changeImage(this, 2)" alt="Thumbnail" class="thumbnail"
-                             src="https://haycafe.vn/wp-content/uploads/2021/11/hinh-anh-xuka-e-then.jpg"/>
-                        <img id="thumb-4" onclick="changeImage(this, 3)" alt="Thumbnail" class="thumbnail"
-                             src="https://cdn-icons-png.flaticon.com/512/190/190737.png"/>
-                        <img id="thumb-5" onclick="changeImage(this, 4)" alt="Thumbnail" class="thumbnail"
-                             src="https://cdn-icons-png.flaticon.com/512/190/190737.png"/>
-                        <img id="thumb-6" onclick="changeImage(this, 5)" alt="Thumbnail" class="thumbnail"
-                             src="https://cdn-icons-png.flaticon.com/512/190/190737.png"/>
-                        <img id="thumb-7" onclick="changeImage(this, 6)" alt="Thumbnail" class="thumbnail"
-                             src="https://cdn-icons-png.flaticon.com/512/190/190737.png"/>
+                        <img id="thumb-0" onclick="changeImage(this, 0)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-1" onclick="changeImage(this, 1)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-2" onclick="changeImage(this, 2)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-3" onclick="changeImage(this, 3)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-4" onclick="changeImage(this, 4)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-5" onclick="changeImage(this, 5)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-6" onclick="changeImage(this, 6)" alt="Thumbnail" class="thumbnail"/>
 
                     </div>
                     <button class="nav-button next" onclick="moveRight()">&#10095;</button>
@@ -163,16 +176,30 @@
         </div>
     </div>
 </div>
+
+
+<div id="imageOptions" class="modal" style="display: none;">
+    <div class="modal-content">
+        <h2>Chọn hành động</h2>
+        <button id="editImage" class="btn btn-primary">Sửa ảnh</button>
+        <button id="deleteImage" class="btn btn-danger">Xóa ảnh</button>
+        <button id="closeModal" class="btn btn-secondary">Đóng</button>
+    </div>
+</div>
+
+
 <script>
+
+
     const imageUrls = [
-        "https://bedental.vn/wp-content/uploads/2022/12/Anh-Avatar-Doremon-dep-ngau-cute.jpg",
-        "https://cafefcdn.com/203337114487263232/2023/3/10/photo-1-1678418195082845728288.jpg",
-        "https://haycafe.vn/wp-content/uploads/2021/11/hinh-anh-xuka-e-then.jpg",
+        // ảnh chính
+        /*<![CDATA[*/ "/uploads/[[${#strings.substringAfter(room.roomImg, 'uploads/')}]]" /*]]>*/,
         "",
         "",
         "",
         "",
-        ""
+        "",
+        "",
     ];
 
     function changeImage(img, index) {
@@ -225,6 +252,52 @@
         }, 10);
     }
 
+
+
+
+//     xử lý nhấn giữ
+    let holdTimer;
+
+    function showOptions(index) {
+        const modal = document.getElementById('imageOptions');
+        modal.style.display = 'flex';
+
+        document.getElementById('editImage').onclick = function() {
+            // Thực hiện hành động sửa ảnh
+            const newUrl = prompt("Nhập URL ảnh mới:");
+            if (newUrl) {
+                imageUrls[index] = newUrl;
+                document.getElementById(`thumb-${index}`).src = newUrl;
+                document.getElementById('mainImage').src = newUrl; // Cập nhật ảnh chính
+            }
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('deleteImage').onclick = function() {
+            // Thực hiện hành động xóa ảnh
+            imageUrls[index] = ""; // Xóa URL
+            document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png"; // Hình ảnh mặc định
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('closeModal').onclick = function() {
+            modal.style.display = 'none';
+        };
+    }
+
+    document.querySelectorAll('.thumbnail').forEach((img, index) => {
+        img.addEventListener('mousedown', () => {
+            holdTimer = setTimeout(() => showOptions(index), 500); // Hiển thị sau 500ms
+        });
+
+        img.addEventListener('mouseup', () => {
+            clearTimeout(holdTimer); // Hủy nếu nhả chuột
+        });
+
+        img.addEventListener('mouseleave', () => {
+            clearTimeout(holdTimer); // Hủy nếu chuột ra ngoài
+        });
+    });
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

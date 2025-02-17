@@ -57,7 +57,7 @@
             <td><span class="badge bg-secondary">Đang Dọn</span></td>
             <td th:text="${room.roomDescription}"></td>
             <td>
-                <form th:id="'cleaningForm-' + ${room.roomId}" th:action="@{/cleaner-home/update}" method="post">
+                <form th:id="'cleaningForm-' + ${room.roomId}" th:action="@{/cleaner/update}" method="post">
                     <input type="hidden" name="roomId" th:value="${room.roomId}">
                     <button type="button" class="btn btn-success" th:attr="onclick=|confirmCleaning(${room.roomId})|">
                         Hoàn Thành

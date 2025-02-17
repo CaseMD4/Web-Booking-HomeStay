@@ -98,10 +98,10 @@ public class SecurityConfig {
                                     response.sendRedirect("/admin/dashboard");
                                     break;
                                 case "ROLE_CASHIER":
-                                    response.sendRedirect("/cashier");
+                                    response.sendRedirect("/cashier/showCashierHome");
                                     break;
                                 case "ROLE_CLEANER":
-                                    response.sendRedirect("/cleaner");
+                                    response.sendRedirect("/cleaner/showCleanerHome");
                                     break;
                                 case "ROLE_USER":
                                     response.sendRedirect("/user/userHome");

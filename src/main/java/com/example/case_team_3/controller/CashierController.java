@@ -5,6 +5,7 @@ import com.example.case_team_3.model.Room;
 import com.example.case_team_3.model.cashier.Invoice;
 import com.example.case_team_3.model.cashier.TransactionHistory;
 import com.example.case_team_3.model.chat.ChatRoom;
+import com.example.case_team_3.model.chat.Message;
 import com.example.case_team_3.repository.EmployeeRepository;
 import com.example.case_team_3.service.RoomService;
 import com.example.case_team_3.service.cashier_and_cleaner.InvoiceService;
@@ -15,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,11 +31,6 @@ import java.util.Random;
 @RequestMapping("/cashier")
 @PreAuthorize("hasRole('ROLE_CASHIER')")
 public class CashierController {
-//    @Autowired
-//    private RoomService roomService;
-
-
-
 
     @Autowired
     private RoomService roomService;
@@ -45,22 +43,20 @@ public class CashierController {
     private EmployeeRepository employeeRepository;
 
 
+    @GetMapping("/showCashierHome")
+    public String viewRooms(@RequestParam(required = false) String status, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String cashierUsername = authentication.getName();
+        Employee employee = employeeRepository.findByEmployeeUsername(cashierUsername);
 
+        List<ChatRoom> chatRooms = chatService.findChatRoomsForCashier(employee.getEmployeeId());
 
-@GetMapping("")
-public String viewRooms(@RequestParam(required = false) String status, Model model) {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String cashierUsername = authentication.getName();
-    Employee employee = employeeRepository.findByEmployeeUsername(cashierUsername);
-
-    List<ChatRoom> chatRooms = chatService.findChatRoomsForCashier(employee.getEmployeeId());
-
-    model.addAttribute("chatRooms", chatRooms);
-    model.addAttribute("cashierUsername", cashierUsername);
-    model.addAttribute("rooms", roomService.getRoomsByStatus(status));
-    model.addAttribute("filter", status);
-    return "/cashier/cashierHome";
-}
+        model.addAttribute("chatRooms", chatRooms);
+        model.addAttribute("cashierUsername", cashierUsername);
+        model.addAttribute("rooms", roomService.getRoomsByStatus(status));
+        model.addAttribute("filter", status);
+        return "cashierPage";
+    }
 
     @GetMapping("/{id}/payment")
     public String viewPayments(@PathVariable Integer id, Model model) {
@@ -97,7 +93,7 @@ public String viewRooms(@RequestParam(required = false) String status, Model mod
             roomService.createRoom(room);
         }
 
-        return "redirect:/cashier";
+        return "redirect:/cashier/showCashierHome";
     }
 
     @PostMapping("/checkout")
@@ -112,7 +108,7 @@ public String viewRooms(@RequestParam(required = false) String status, Model mod
             room.setRoomStatus(Room.RoomStatus.cleaning);
             roomService.createRoom(room);
         }
-        return "redirect:/cashier";
+        return "redirect:/cashier/showCashierHome";
     }
 
     @GetMapping("/{id}/transactions")
@@ -154,37 +150,20 @@ public String viewRooms(@RequestParam(required = false) String status, Model mod
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(pdfBytes);
     }
-}
-
-
-
-//    /  @todo cũ
+//    @PostMapping("/send-message")
+//    public ResponseEntity<?> sendMessage(@RequestParam("chatRoomId") Integer chatRoomId,
+//                                         @RequestParam("content") String content,
+//                                         @AuthenticationPrincipal UserDetails userDetails) {
+//        String username = userDetails.getUsername();
+//        Employee employee = employeeRepository.findByEmployeeUsername(username);
 //
-//    @GetMapping("")
-//    public String viewRooms(@RequestParam(required = false) String status, @RequestParam(required = false) String type, Model model) {
-//        List<Room> rooms;
-//        if (status != null) {
-//            rooms = roomService.getRoomsByStatus(Room.RoomStatus.valueOf(status));
-//        } else if (type != null) {
-//            rooms = roomService.getRoomsByType(type);
-//        } else {
-//            rooms = roomService.getAllRooms();
-//        }
-//        model.addAttribute("rooms", rooms);
-//        return "cashierHome";
-//    }
-
-//    @PostMapping("/updateRoomStatus")
-//    public String updateRoomStatus(@RequestParam Long roomId, @RequestParam String status, Model model) {
-//        Float unpaidAmount = roomService.getUnpaidAmount(roomId);
-//        if (!roomService.updateRoomStatus(roomId, status)) {
-//            model.addAttribute("unpaidAmount", unpaidAmount);
-//            return "payment_pending"; // Chuyển đến trang báo nợ
-//        }
-//        return "redirect:/cashier/cashierRoom";
+//        chatService.saveMessage(chatRoomId, String.valueOf(employee.getEmployeeId()), null, content, Message.SenderType.cashier);
+//
+//        return ResponseEntity.ok().build();
 //    }
 
 
 
+}
 
 

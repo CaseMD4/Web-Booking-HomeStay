@@ -64,22 +64,27 @@
                         <tbody>
                         <tr th:each="room : ${rooms}">
                             <td>
+
                                 <img th:if="${room.roomImg != null}"
-                                     th:src="${room.roomImg}"
+                                     th:src="@{/uploads/{filename}(filename=${#strings.substringAfter(room.roomImg, 'uploads/')})}"
                                      alt="Room Image"
-                                     class="room-image">
+                                     class="room-image"
+                                     style="width: 100px; height: auto;">
                                 <span th:if="${room.roomImg == null}" class="text-muted">Không có ảnh</span>
+
+
                             </td>
+
                             <td th:text="${room.roomDescription}"></td>
                             <td th:text="${room.roomType.roomTypeName}"></td>
                             <td>
-                                <span th:switch="${room.roomStatus}" class="badge"
-                                      th:classappend="${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).available} ? 'bg-success' :
-                                                     (${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).booked} ? 'bg-warning' :
-                                                     (${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).cleaning} ? 'bg-info' :
-                                                     (${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).dirty} ? 'bg-danger' : 'bg-secondary')))">
-                                    <span th:text="${room.roomStatus}"></span>
-                                </span>
+        <span th:switch="${room.roomStatus}" class="badge"
+              th:classappend="${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).available} ? 'bg-success' :
+                               (${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).booked} ? 'bg-warning' :
+                               (${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).cleaning} ? 'bg-info' :
+                               (${room.roomStatus == T(com.example.case_team_3.model.Room.RoomStatus).dirty} ? 'bg-danger' : 'bg-secondary')))">
+            <span th:text="${room.roomStatus}"></span>
+        </span>
                             </td>
                             <td th:text="${#numbers.formatCurrency(room.roomPrice)}"></td>
                             <td>

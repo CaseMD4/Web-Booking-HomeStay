@@ -5,6 +5,7 @@ import com.example.case_team_3.model.Room;
 import com.example.case_team_3.model.RoomType;
 import com.example.case_team_3.model.User;
 import com.example.case_team_3.service.EmployeeService;
+import com.example.case_team_3.service.ImageUploadService;
 import com.example.case_team_3.service.RoomService;
 import com.example.case_team_3.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Map;
@@ -37,6 +39,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ImageUploadService imgUploadService;
 
 
     @GetMapping("/edit-room/{id}")
@@ -92,6 +97,63 @@ public class AdminController {
         return "redirect:/admin/all-rooms";
     }
 
+//    @GetMapping("/all-rooms")
+//    public String showAllRooms(Model model) {
+//        List<Room> rooms = roomService.getAllRooms();
+//        model.addAttribute("rooms", rooms);
+//        return "all-rooms";
+//    }
+
+//    @GetMapping("/create-room")
+//    public String showCreateRoomForm(Model model, HttpServletRequest request) {
+//        // Explicitly add CSRF token to the model
+//        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
+//        if (csrfToken != null) {
+//            model.addAttribute("_csrf", csrfToken);
+//        }
+//
+//        Room room = new Room();
+//        List<RoomType> roomTypes = roomService.getAllRoomTypes();
+//        model.addAttribute("room", room);
+//        model.addAttribute("roomTypes", roomTypes);
+//        return "create-room";
+//    }
+
+//    @PostMapping("/create-room")
+//    public String createRoom(@ModelAttribute Room room,
+//                             @RequestParam(required = false) Integer existingRoomTypeId,
+//                             @RequestParam(required = false) String newRoomTypeName,
+//                             RedirectAttributes redirectAttributes) {
+//        try {
+//            RoomType roomType;
+//            if (existingRoomTypeId != null) {
+//                roomType = roomService.getRoomTypeById(existingRoomTypeId);
+//            } else if (StringUtils.hasText(newRoomTypeName)) {
+//                roomType = roomService.createRoomType(newRoomTypeName);
+//            } else {
+//                redirectAttributes.addFlashAttribute("error", "Vui lòng chọn hoặc tạo loại phòng");
+//                return "redirect:/admin/create-room";
+//            }
+//            room.setRoomType(roomType);
+//            room.setRoomStatus(Room.RoomStatus.available);
+//            roomService.createRoom(room);
+//
+//            redirectAttributes.addFlashAttribute("success", "Tạo phòng thành công");
+//            return "redirect:/admin/dashboard";
+//        } catch (Exception e) {
+//            redirectAttributes.addFlashAttribute("error", "Lỗi khi tạo phòng: " + e.getMessage());
+//            return "redirect:/admin/create-room";
+//        }
+//    }
+
+    @GetMapping("/all-rooms")
+    public String showAllRooms(Model model) {
+        List<Room> rooms = roomService.getAllRooms();
+        model.addAttribute("rooms", rooms);
+        return "all-rooms-with-file";
+    }
+
+
     @GetMapping("/create-room")
     public String showCreateRoomForm(Model model, HttpServletRequest request) {
         // Explicitly add CSRF token to the model
@@ -104,13 +166,15 @@ public class AdminController {
         List<RoomType> roomTypes = roomService.getAllRoomTypes();
         model.addAttribute("room", room);
         model.addAttribute("roomTypes", roomTypes);
-        return "create-room";
+        return "create-room-with-file";
     }
+
 
     @PostMapping("/create-room")
     public String createRoom(@ModelAttribute Room room,
                              @RequestParam(required = false) Integer existingRoomTypeId,
                              @RequestParam(required = false) String newRoomTypeName,
+                             @RequestParam(required = false) MultipartFile[] imgFiles, // Updated parameter
                              RedirectAttributes redirectAttributes) {
         try {
             RoomType roomType;
@@ -123,8 +187,12 @@ public class AdminController {
                 return "redirect:/admin/create-room";
             }
 
+            // Upload images and get the paths
+            String roomImg = imgUploadService.uploadImages(imgFiles);
+
             room.setRoomType(roomType);
             room.setRoomStatus(Room.RoomStatus.available);
+            room.setRoomImg(roomImg);
             roomService.createRoom(room);
 
             redirectAttributes.addFlashAttribute("success", "Tạo phòng thành công");
@@ -134,6 +202,7 @@ public class AdminController {
             return "redirect:/admin/create-room";
         }
     }
+
 
     @PostMapping("/create-room-type")
     @ResponseBody
@@ -173,12 +242,7 @@ public class AdminController {
         }
     }
 
-    @GetMapping("/all-rooms")
-    public String showAllRooms(Model model) {
-        List<Room> rooms = roomService.getAllRooms();
-        model.addAttribute("rooms", rooms);
-        return "all-rooms";
-    }
+
 
 
     @GetMapping("/switch-to-customer-view")

@@ -6,7 +6,7 @@ import com.example.case_team_3.model.RoomType;
 import com.example.case_team_3.model.User;
 import com.example.case_team_3.model.ImageRoomDetail;
 import com.example.case_team_3.service.*;
-import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -55,6 +55,21 @@ public class AdminController {
         System.out.println(room.toString());
         return "room-details-by-admin";
     }
+
+
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//    @Column(name = "room_id", nullable = false)
+//    private Long roomId;
+//
+//    @Column(name = "image_room_detail_place_count", nullable = false)
+//    private int imageRoomDetailPlaceCount;
+//
+//    @Column(name = "image_room_detail_link", nullable = false)
+//    private String imageRoomDetailLink;
 
 
     @GetMapping("/edit-room/{id}")

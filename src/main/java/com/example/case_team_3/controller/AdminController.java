@@ -54,17 +54,17 @@ public class AdminController {
             return "redirect:/admin/all-rooms?error=Room not found";
         }
 
-        // Add room types
         List<RoomType> roomTypes = roomService.getAllRoomTypes();
         model.addAttribute("roomTypes", roomTypes);
         model.addAttribute("room", room);
-        return "edit-room";
+        return "edit-room-with-file";
     }
 
 
     @PostMapping("/edit-room/{id}")
     public String updateRoom(@PathVariable Long id,
                              @ModelAttribute("room") Room roomDetails,
+                             @RequestParam(required = false) MultipartFile[] imgFiles, // Thêm tham số cho tệp hình ảnh
                              BindingResult bindingResult,
                              Model model) {
         // Validate room details
@@ -74,13 +74,20 @@ public class AdminController {
         }
 
         try {
-            // Update the room
+            // Nếu có tệp hình ảnh được tải lên, xử lý việc lưu hình ảnh
+            if (imgFiles != null && imgFiles.length > 0) {
+                String imagePaths = imgUploadService.uploadImages(imgFiles);
+                // Cập nhật đường dẫn hình ảnh vào đối tượng roomDetails
+                roomDetails.setRoomImg(imagePaths); // Giả sử roomDetails có phương thức setRoomImg
+            }
+
+            // Cập nhật thông tin phòng
             roomService.updateRoom(id, roomDetails);
             return "redirect:/admin/all-rooms?success=Room updated successfully";
         } catch (Exception e) {
             model.addAttribute("error", "Error updating room: " + e.getMessage());
             model.addAttribute("roomTypes", roomService.getAllRoomTypes());
-            return "edit-room";
+            return "edit-room-with-file";
         }
     }
 
@@ -97,54 +104,6 @@ public class AdminController {
         return "redirect:/admin/all-rooms";
     }
 
-//    @GetMapping("/all-rooms")
-//    public String showAllRooms(Model model) {
-//        List<Room> rooms = roomService.getAllRooms();
-//        model.addAttribute("rooms", rooms);
-//        return "all-rooms";
-//    }
-
-//    @GetMapping("/create-room")
-//    public String showCreateRoomForm(Model model, HttpServletRequest request) {
-//        // Explicitly add CSRF token to the model
-//        CsrfToken csrfToken = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
-//        if (csrfToken != null) {
-//            model.addAttribute("_csrf", csrfToken);
-//        }
-//
-//        Room room = new Room();
-//        List<RoomType> roomTypes = roomService.getAllRoomTypes();
-//        model.addAttribute("room", room);
-//        model.addAttribute("roomTypes", roomTypes);
-//        return "create-room";
-//    }
-
-//    @PostMapping("/create-room")
-//    public String createRoom(@ModelAttribute Room room,
-//                             @RequestParam(required = false) Integer existingRoomTypeId,
-//                             @RequestParam(required = false) String newRoomTypeName,
-//                             RedirectAttributes redirectAttributes) {
-//        try {
-//            RoomType roomType;
-//            if (existingRoomTypeId != null) {
-//                roomType = roomService.getRoomTypeById(existingRoomTypeId);
-//            } else if (StringUtils.hasText(newRoomTypeName)) {
-//                roomType = roomService.createRoomType(newRoomTypeName);
-//            } else {
-//                redirectAttributes.addFlashAttribute("error", "Vui lòng chọn hoặc tạo loại phòng");
-//                return "redirect:/admin/create-room";
-//            }
-//            room.setRoomType(roomType);
-//            room.setRoomStatus(Room.RoomStatus.available);
-//            roomService.createRoom(room);
-//
-//            redirectAttributes.addFlashAttribute("success", "Tạo phòng thành công");
-//            return "redirect:/admin/dashboard";
-//        } catch (Exception e) {
-//            redirectAttributes.addFlashAttribute("error", "Lỗi khi tạo phòng: " + e.getMessage());
-//            return "redirect:/admin/create-room";
-//        }
-//    }
 
     @GetMapping("/all-rooms")
     public String showAllRooms(Model model) {
@@ -241,8 +200,6 @@ public class AdminController {
             ));
         }
     }
-
-
 
 
     @GetMapping("/switch-to-customer-view")

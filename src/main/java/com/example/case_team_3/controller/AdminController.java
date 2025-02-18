@@ -56,21 +56,30 @@ public class AdminController {
         return "room-details-by-admin";
     }
 
+    @PostMapping("/add-image-details/{roomId}")
+    public String addImage(@PathVariable Long roomId, @ModelAttribute ImageRoomDetail imageRoomDetail) {
+        imageRoomDetailService.addImageRoomDetail(imageRoomDetail);
+        return "redirect:/image-details/" + roomId;
+    }
+
+    @PostMapping("/delete-image-details/{imageId}/{roomId}")
+    public String deleteImage(@PathVariable Long imageId, @PathVariable String roomId) {
+        imageRoomDetailService.deleteImageRoomDetail(imageId);
+        return "redirect:/image-details/" + roomId;
+    }
+
+    @PostMapping("/edit-image-details/{imageId}/{roomId}")
+    public String editImage(@PathVariable Long imageId, @PathVariable String roomId, @ModelAttribute ImageRoomDetail imageRoomDetail) {
+        imageRoomDetailService.updateImageRoomDetail(imageId, imageRoomDetail);
+        return "redirect:/image-details/" + roomId;
+    }
 
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long id;
-//
-//    @Column(name = "room_id", nullable = false)
-//    private Long roomId;
-//
-//    @Column(name = "image_room_detail_place_count", nullable = false)
-//    private int imageRoomDetailPlaceCount;
-//
-//    @Column(name = "image_room_detail_link", nullable = false)
-//    private String imageRoomDetailLink;
 
+
+
+
+//    room
 
     @GetMapping("/edit-room/{id}")
     public String showEditRoomForm(@PathVariable Long id, Model model) {

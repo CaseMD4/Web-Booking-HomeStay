@@ -14,14 +14,14 @@ public class ImageRoomDetailService {
     private ImageRoomDetailRepository imageRoomDetailRepository;
 
 
-    public ImageRoomDetail addImageRoomDetail(ImageRoomDetail imageRoomDetail) {
-        return imageRoomDetailRepository.save(imageRoomDetail);
+    public void addImageRoomDetail(ImageRoomDetail imageRoomDetail) {
+        imageRoomDetailRepository.save(imageRoomDetail);
     }
 
 
-    public ImageRoomDetail updateImageRoomDetail(Long id, ImageRoomDetail updatedImageRoomDetail) {
+    public void updateImageRoomDetail(Long id, ImageRoomDetail updatedImageRoomDetail) {
         updatedImageRoomDetail.setId(id);
-        return imageRoomDetailRepository.save(updatedImageRoomDetail);
+        imageRoomDetailRepository.save(updatedImageRoomDetail);
     }
 
     public void deleteImageRoomDetail(Long id) {

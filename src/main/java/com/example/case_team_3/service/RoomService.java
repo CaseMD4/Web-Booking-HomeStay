@@ -289,4 +289,13 @@ public class RoomService {
             return null;
         }
     }
+
+    public  List<Room> searchRooms(String roomDescription, Float priceMin, Float priceMax, RoomType roomTypeName)  {
+        return roomRepository.findByRoomDescriptionAndRoomPriceBetweenAndRoomType(roomDescription, priceMin, priceMax, roomTypeName);
+    }
+
+
+    public RoomType getRoomTypeByRoomTypeName(String roomType) {
+        return roomTypeRepository.findByRoomTypeName(roomType);
+    }
 }

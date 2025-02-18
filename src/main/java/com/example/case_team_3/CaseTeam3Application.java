@@ -1,7 +1,6 @@
 package com.example.case_team_3;
 
 import com.example.case_team_3.service.EmailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,8 +13,12 @@ public class CaseTeam3Application {
         SpringApplication.run(CaseTeam3Application.class, args);
     }
 
+
+
+
     @Bean
     public CommandLineRunner sendTestEmail(EmailService emailService) {
+
         return args -> {
             try {
                 String verificationCode = emailService.generateNumericCode(6);

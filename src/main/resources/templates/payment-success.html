@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán thành công</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container text-center mt-5">
+    <h2 class="text-success">Thanh toán thành công!</h2>
+    <p>Mã đơn hàng: <span th:text="${payment.id}"></span></p>
+    <p>Số tiền: <span th:text="${payment.amount}"></span></p>
+    <a href="/user/rooms" class="btn btn-primary">Về trang chủ</a>
+</div>
+</body>
+</html>

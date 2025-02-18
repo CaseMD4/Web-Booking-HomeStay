@@ -1,0 +1,308 @@
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Hình Ảnh Chi Tiết</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      background-image: url('https://img5.thuthuatphanmem.vn/uploads/2022/01/10/anh-bia-zalo-phong-canh-vinh-ha-long-tuyet-dep_024649572.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    .content {
+      flex: 1 0 auto;
+    }
+
+    .navbar {
+      background-color: rgba(0, 0, 0, 0.7);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-container {
+      display: flex;
+      overflow-x: auto; /* Cho phép cuộn ngang */
+      scroll-snap-type: x mandatory; /* Tạo hiệu ứng cuộn */
+      gap: 10px; /* Khoảng cách giữa các thumbnail */
+      padding: 10px 0; /* Padding cho container */
+      width: 530px;
+    }
+
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      cursor: pointer;
+      scroll-snap-align: start; /* Căn chỉnh ảnh khi cuộn */
+    }
+
+
+    #mainImage {
+      height: 320px; /* Chiều cao cố định */
+      width: 530px; /* Chiều rộng cố định */
+      object-fit: cover; /* Đảm bảo ảnh bao phủ container mà không bị biến dạng */
+    }
+
+    .slider-container {
+      position: relative;
+      width: 530px;
+      overflow: hidden;
+      margin: auto;
+    }
+
+    .image-track {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 20px;
+      z-index: 2;
+    }
+
+    .prev {
+      left: 0;
+    }
+
+    .next {
+      right: 0;
+    }
+
+    /* form edit ảnh */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+    <div class="d-flex flex-column">
+      <a class="navbar-brand" href="/admin/dashboard"><i class="fas fa-home"></i> Admin Dashboard</a>
+    </div>
+    <form th:action="@{/logout}" method="post" class="d-flex ms-auto">
+      <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+      <span class="navbar-text me-3">Xin chào, <span sec:authentication="name"></span></span>
+      <button type="submit" class="btn btn-outline-light">Đăng xuất</button>
+    </form>
+  </div>
+</nav>
+<div class="bg-white text-gray-800 bg-opacity-90 p-4 rounded-lg m-4">
+  <div class="container mx-auto p-4">
+    <div class="flex flex-col md:flex-row">
+      <div class="md:w-1/2">
+
+        <div class="slider-container">
+          <img id="mainImage" th:if="${room.roomImg != null}"
+               th:src="@{/uploads/{filename}(filename=${#strings.substringAfter(room.roomImg, 'uploads/')})}"
+               alt="Room Image"
+               class="w-full mb-4"
+          ><span th:if="${room.roomImg == null}" class="text-muted">Không có ảnh</span>
+
+        </div>
+
+        <div class="slider-container">
+
+
+          <button class="nav-button prev" onclick="moveLeft()">&#10094;</button>
+          <div class="image-track">
+
+            <img id="thumb-0" onclick="changeImage(this, 0)" alt="Thumbnail" class="thumbnail"/>
+            <img id="thumb-1" onclick="changeImage(this, 1)" alt="Thumbnail" class="thumbnail"/>
+            <img id="thumb-2" onclick="changeImage(this, 2)" alt="Thumbnail" class="thumbnail"/>
+            <img id="thumb-3" onclick="changeImage(this, 3)" alt="Thumbnail" class="thumbnail"/>
+            <img id="thumb-4" onclick="changeImage(this, 4)" alt="Thumbnail" class="thumbnail"/>
+            <img id="thumb-5" onclick="changeImage(this, 5)" alt="Thumbnail" class="thumbnail"/>
+            <img id="thumb-6" onclick="changeImage(this, 6)" alt="Thumbnail" class="thumbnail"/>
+
+          </div>
+          <button class="nav-button next" onclick="moveRight()">&#10095;</button>
+
+        </div>
+      </div>
+      <div class="md:w-1/2 md:pl-8">
+        <h1 class="text-2xl font-bold mb-2">Luxurious Hotel Room</h1>
+        <div class="flex items-center mb-2">
+          <span class="text-yellow-500 text-lg"><i class="fas fa-star"></i></span>
+          <span class="text-yellow-500 text-lg"><i class="fas fa-star"></i></span>
+          <span class="text-yellow-500 text-lg"><i class="fas fa-star"></i></span>
+          <span class="text-yellow-500 text-lg"><i class="fas fa-star"></i></span>
+          <span class="text-yellow-500 text-lg"><i class="fas fa-star-half-alt"></i></span>
+          <span class="ml-2 text-gray-600">4.7</span>
+          <span class="ml-2 text-gray-600">1,234 Reviews</span>
+        </div>
+        <div class="text-3xl font-bold text-red-500 mb-2">$199.00<span class="text-gray-500 line-through">$299.00</span><span
+                class="text-red-500">-33%</span></div>
+        <div class="text-gray-600 mb-2">Description</div>
+        <p class="text-gray-600 mb-4">Enjoy a luxurious stay in our modern hotel room equipped with all the
+          amenities you need for a comfortable and relaxing stay. The room features a large bed, modern decor,
+          and a stunning view of the city.</p>
+
+<!--        @todo: sửa đường dẫn đặt phòng ở đây  -->
+
+        <div class="flex space-x-4">
+          <button class="bg-orange-500 text-white py-2 px-4 rounded">Add to Favorites</button>
+          <button class="bg-red-500 text-white py-2 px-4 rounded">Book Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="imageOptions" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h2>Chọn hành động</h2>
+    <button id="editImage" class="btn btn-primary">Sửa ảnh</button>
+    <button id="deleteImage" class="btn btn-danger">Xóa ảnh</button>
+    <button id="closeModal" class="btn btn-secondary">Đóng</button>
+  </div>
+</div>
+
+
+<script>
+
+
+  const imageUrls = [
+    // ảnh chính
+    /*<![CDATA[*/ "/uploads/[[${#strings.substringAfter(room.roomImg, 'uploads/')}]]" /*]]>*/,
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ];
+
+  function changeImage(img, index) {
+    const mainImage = document.getElementById('mainImage');
+    if (imageUrls[index]) {
+      mainImage.src = imageUrls[index];
+    } else {
+      const imageUrl = prompt("Nhập URL ảnh:");
+      if (imageUrl) {
+        imageUrls[index] = imageUrl;
+        mainImage.src = imageUrl;
+        document.getElementById(`thumb-${index}`).src = imageUrl;
+      }
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    for (let i = 0; i < imageUrls.length; i++) {
+      const imgElement = document.getElementById(`thumb-${i}`);
+      if (imgElement) {
+        imgElement.src = imageUrls[i] || "https://cdn-icons-png.flaticon.com/512/190/190737.png";
+      }
+    }
+  });
+
+
+  let track = document.querySelector('.image-track');
+
+  function moveRight() {
+    let firstImage = track.children[0];
+    track.style.transition = "transform 0.5s ease-in-out";
+    track.style.transform = "translateX(-110px)";
+
+    setTimeout(() => {
+      track.appendChild(firstImage);
+      track.style.transition = "none";
+      track.style.transform = "translateX(0)";
+    }, 500);
+  }
+
+  function moveLeft() {
+    let lastImage = track.children[track.children.length - 1];
+    track.style.transition = "none";
+    track.insertBefore(lastImage, track.firstChild);
+    track.style.transform = "translateX(-110px)";
+
+    setTimeout(() => {
+      track.style.transition = "transform 0.5s ease-in-out";
+      track.style.transform = "translateX(0)";
+    }, 10);
+  }
+
+
+
+
+  //     xử lý nhấn giữ
+  let holdTimer;
+
+  function showOptions(index) {
+    const modal = document.getElementById('imageOptions');
+    modal.style.display = 'flex';
+
+    document.getElementById('editImage').onclick = function() {
+      // Thực hiện hành động sửa ảnh
+      const newUrl = prompt("Nhập URL ảnh mới:");
+      if (newUrl) {
+        imageUrls[index] = newUrl;
+        document.getElementById(`thumb-${index}`).src = newUrl;
+        document.getElementById('mainImage').src = newUrl; // Cập nhật ảnh chính
+      }
+      modal.style.display = 'none';
+    };
+
+    document.getElementById('deleteImage').onclick = function() {
+      // Thực hiện hành động xóa ảnh
+      imageUrls[index] = ""; // Xóa URL
+      document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png"; // Hình ảnh mặc định
+      modal.style.display = 'none';
+    };
+
+    document.getElementById('closeModal').onclick = function() {
+      modal.style.display = 'none';
+    };
+  }
+
+  document.querySelectorAll('.thumbnail').forEach((img, index) => {
+    img.addEventListener('mousedown', () => {
+      holdTimer = setTimeout(() => showOptions(index), 500); // Hiển thị sau 500ms
+    });
+
+    img.addEventListener('mouseup', () => {
+      clearTimeout(holdTimer); // Hủy nếu nhả chuột
+    });
+
+    img.addEventListener('mouseleave', () => {
+      clearTimeout(holdTimer); // Hủy nếu chuột ra ngoài
+    });
+  });
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -18,6 +18,7 @@ public class RoomType {
     private List<Room> rooms;
 
 
+
     @Override
     public String toString() {
         return "RoomType{" +

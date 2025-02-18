@@ -44,6 +44,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'com.sun.mail:javax.mail:1.6.2'
 
+    implementation group: 'com.paypal.sdk', name: 'rest-api-sdk', version: '1.14.0'
+
+
+
     implementation 'com.itextpdf:itext7-core:7.1.15' // Check for the latest version
 }
 

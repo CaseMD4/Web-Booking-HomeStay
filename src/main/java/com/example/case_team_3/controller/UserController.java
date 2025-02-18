@@ -2,9 +2,11 @@ package com.example.case_team_3.controller;
 
 
 import com.example.case_team_3.model.Booking;
+import com.example.case_team_3.model.Favorite;
 import com.example.case_team_3.model.Room;
 import com.example.case_team_3.model.User;
 import com.example.case_team_3.service.BookingService;
+import com.example.case_team_3.service.FavoriteService;
 import com.example.case_team_3.service.RoomService;
 import com.example.case_team_3.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -33,9 +36,43 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private FavoriteService favoriteService;
+
+    // Endpoint cho người dùng
+    @GetMapping("/favorites/{userId}")
+    public String showRoomFavoritesRoomByUser(@PathVariable Long userId, Model model) {
+        List<Favorite> listFavorite = favoriteService.getFavoritesByUserId(userId);
+        List<Room> listRoom = favoriteService.getRoomByUserFavorites(listFavorite);
+        model.addAttribute("rooms", listRoom);
+        return "all-rooms-favorites-by-user";
+    }
+
+
+
+
+
+
+    @PostMapping("/addFavorites")
+    public void addFavorite(@RequestParam Long userId, @RequestParam Long roomId) {
+        favoriteService.addFavorite(userId, roomId);
+    }
+
+    @DeleteMapping("/removeFavorite")
+    public void removeFavorite(@RequestParam Long userId, @RequestParam Long roomId) {
+        favoriteService.removeFavorite(userId, roomId);
+    }
+
+
+
+
+
     //    customerHome
     @RequestMapping("/userHome")
-    public String showCustomerHome() {
+    public String showCustomerHome(Model model, Principal principal) {
+        // Giả sử bạn có một phương thức để lấy userId từ username
+        Long userId = userService.getUserIdByname(principal.getName());
+        model.addAttribute("userId", userId);
         return "customerHome";
     }
 

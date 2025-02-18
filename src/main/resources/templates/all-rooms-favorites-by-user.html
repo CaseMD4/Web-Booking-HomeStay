@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Phòng Yêu Thích</title>
+</head>
+<body>
+<h1>Danh Sách Phòng Yêu Thích</h1>
+<ul>
+    <th:block th:each="room : ${rooms}">
+        <li th:text="${room.name}">Tên Phòng</li>
+    </th:block>
+</ul>
+</body>
+</html>

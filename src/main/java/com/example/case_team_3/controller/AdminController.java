@@ -1,10 +1,6 @@
 package com.example.case_team_3.controller;
 
-import com.example.case_team_3.model.Employee;
-import com.example.case_team_3.model.Room;
-import com.example.case_team_3.model.RoomType;
-import com.example.case_team_3.model.User;
-import com.example.case_team_3.model.ImageRoomDetail;
+import com.example.case_team_3.model.*;
 import com.example.case_team_3.service.*;
 import jakarta.persistence.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +24,8 @@ import java.util.List;
 @RequestMapping("/admin")
 @PreAuthorize("hasRole('ROLE_ADMIN')")
 public class AdminController {
+    @Autowired
+    private FavoriteService favoriteService;
 
     @Autowired
     private EmployeeService employeeService;
@@ -45,16 +43,47 @@ public class AdminController {
     private ImageRoomDetailService imageRoomDetailService;
 
 
-//    @GetMapping("/image-details/{id}")
-//    public String showImageDetails(@PathVariable Long id, Model model) {
-//        List<ImageRoomDetail> images = imageRoomDetailService.findAllDetailImageByRoomId(id);
-//        model.addAttribute("images", images);
-//        Room room = roomService.getRoomById(Math.toIntExact(id));
-//        model.addAttribute("room", room);
-//
-//        System.out.println(room.toString());
-//        return "room-details-by-admin";
-//    }
+    @GetMapping("/favorites-rooms")
+    public String showRoomsFavorites(Model model) {
+        List<Favorite> favorites = favoriteService.getAllFavorites();
+        Map<Long, Long> favoriteCounts = favoriteService.getFavoriteCounts();
+
+        model.addAttribute("favorites", favorites);
+        model.addAttribute("favoriteCounts", favoriteCounts);
+
+        return "all-rooms-favorites-by-admin";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @GetMapping("/image-details/{id}")
+    public String showImageDetails(@PathVariable Long id, Model model) {
+        List<ImageRoomDetail> images = imageRoomDetailService.findAllDetailImageByRoomId(id);
+        model.addAttribute("images", images);
+        Room room = roomService.getRoomById(Math.toIntExact(id));
+        model.addAttribute("room", room);
+
+        System.out.println(room.toString());
+        return "room-details-by-admin";
+    }
 
 
 
@@ -68,30 +97,54 @@ public class AdminController {
     }
 
 
+//    @PostMapping("/edit-image-details/{imageId}/{roomId}")
+//    public String editImage(@PathVariable Long imageId,
+//                            @PathVariable Long roomId,
+//                            @RequestParam(required = false) MultipartFile imgFile) {
+//        if (imgFile != null && !imgFile.isEmpty()) {
+//            String imagePath = imgUploadService.uploadImages(new MultipartFile[]{imgFile});
+//
+////            nếu có thì xóa ảnh cũ
+//            Boolean imgExists = imageRoomDetailService.checkIfExists(imageId, roomId);
+//            if (imgExists) {
+//                imageRoomDetailService.deleteImageRoomDetail(imageId);
+//            }
+//
+//            ImageRoomDetail imageRoomDetail = new ImageRoomDetail();
+//            imageRoomDetail.setImageRoomDetailLink(imagePath);
+//            imageRoomDetail.setImageRoomDetailPlaceCount(imageRoomDetailService.getMaxImageRoomDetailPlaceCountPlusOne());
+//
+//            imageRoomDetailService.addImageRoomDetail(imageId, imageRoomDetail);
+//        }
+//        return "redirect:/image-details/" + roomId;
+//    }
+
     @PostMapping("/edit-image-details/{imageId}/{roomId}")
     public String editImage(@PathVariable Long imageId,
                             @PathVariable Long roomId,
                             @RequestParam(required = false) MultipartFile imgFile) {
         if (imgFile != null && !imgFile.isEmpty()) {
             String imagePath = imgUploadService.uploadImages(new MultipartFile[]{imgFile});
+            System.out.println("Đường dẫn hình ảnh đã tải lên: " + imagePath); // Ghi nhận đường dẫn hình ảnh
 
-            ì.deleteImageRoomDetail(imageId);
+            // Kiểm tra nếu hình ảnh cũ tồn tại
+            Boolean imgExists = imageRoomDetailService.checkIfExists(imageId, roomId);
+            System.out.println("Hình ảnh tồn tại: " + imgExists); // Ghi nhận kết quả kiểm tra
 
-
-
-
-
-
-
+            if (imgExists) {
+                imageRoomDetailService.deleteImageRoomDetail(imageId);
+                System.out.println("Hình ảnh cũ đã bị xóa."); // Ghi nhận xóa hình ảnh cũ
+            }
 
             ImageRoomDetail imageRoomDetail = new ImageRoomDetail();
             imageRoomDetail.setImageRoomDetailLink(imagePath);
             imageRoomDetail.setImageRoomDetailPlaceCount(imageRoomDetailService.getMaxImageRoomDetailPlaceCountPlusOne());
 
-//            xoá trước nếu có để dùng chung với add và edit luôn
-            imageRoomDetailService.deleteImageRoomDetail(imageId);
-
+            // Lưu hình ảnh mới
             imageRoomDetailService.addImageRoomDetail(imageId, imageRoomDetail);
+            System.out.println("Thông tin hình ảnh mới đã được lưu."); // Ghi nhận lưu hình ảnh mới
+        } else {
+            System.out.println("Không có tệp hình ảnh nào được cung cấp."); // Ghi nhận không có tệp hình ảnh
         }
         return "redirect:/image-details/" + roomId;
     }
@@ -121,8 +174,6 @@ public class AdminController {
         model.addAttribute("room", room);
         return "edit-room-with-file";
     }
-
-
 
 
     @PostMapping("/edit-room/{id}")

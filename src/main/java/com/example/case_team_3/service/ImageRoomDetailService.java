@@ -44,4 +44,7 @@ public class ImageRoomDetailService {
         return imageRoomDetailRepository.findByRoomId(roomId);
     }
 
+    public Boolean checkIfExists(Long imageId, Long roomId) {
+        return imageRoomDetailRepository.existsByImageIdAndRoomId(imageId, roomId);
+    }
 }

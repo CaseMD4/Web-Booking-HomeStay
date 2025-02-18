@@ -199,69 +199,78 @@
 <script>
 
 
-    document.getElementById('editImage').onclick = function () {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*';
 
-        fileInput.onchange = function (event) {
-            const file = event.target.files[0];
-            if (!file) return;
+    function showOptions(index) {
+        const modal = document.getElementById('imageOptions');
+        modal.style.display = 'flex';
 
-            const formData = new FormData();
-            formData.append("imgFile", file);
+        document.getElementById('editImage').onclick = function () {
+            const fileInput = document.createElement('input');
+            fileInput.type = 'file';
+            fileInput.accept = 'image/*';
 
+
+
+
+            fileInput.onchange = function (event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append("imgFile", file);
+
+                const roomId = "[[${room.roomId}]]";
+                const imageId = "your_image_id";
+
+
+                fetch(`admin/edit-image-details/${imageId}/${roomId}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                    .then(() => {
+                        const objectURL = URL.createObjectURL(file);
+                        imageUrls[index] = objectURL;
+                        document.getElementById(`thumb-${index}`).src = objectURL;
+                        document.getElementById('mainImage').src = objectURL;
+                        modal.style.display = 'none';
+                    });
+            };
+
+            fileInput.click();
+
+
+        };
+
+        document.getElementById('closeModal').onclick = function () {
+            modal.style.display = 'none';
+        };
+
+        document.getElementById('deleteImage').onclick = function () {
             const roomId = "your_room_id";
             const imageId = "your_image_id";
 
-            fetch(`/edit-image-details/${imageId}/${roomId}`, {
-                method: 'POST',
-                body: formData
-            }).then(response => response.text())
-                .then(() => {
-                    const objectURL = URL.createObjectURL(file);
-                    imageUrls[index] = objectURL;
-                    document.getElementById(`thumb-${index}`).src = objectURL;
-                    document.getElementById('mainImage').src = objectURL;
-                    modal.style.display = 'none';
-                });
+            fetch(`admin/delete-image-details/${imageId}/${roomId}`, {
+                method: 'POST'
+            }).then(() => {
+                imageUrls[index] = "";
+                document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png";
+                modal.style.display = 'none';
+            });
         };
 
-        fileInput.click();
-    };
+    }
 
-    document.getElementById('deleteImage').onclick = function () {
-        const roomId = "your_room_id";
-        const imageId = "your_image_id";
+    document.addEventListener("DOMContentLoaded", function () {
+        for (let i = 0; i < imageUrls.length; i++) {
+            const imgElement = document.getElementById(`thumb-${i}`);
+            if (imgElement) {
+                imgElement.src = imageUrls[i] || "https://cdn-icons-png.flaticon.com/512/190/190737.png";
+            }
+        }
+    });
 
-        fetch(`/delete-image-details/${imageId}/${roomId}`, {
-            method: 'POST'
-        }).then(() => {
-            imageUrls[index] = "";
-            document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png";
-            modal.style.display = 'none';
-        });
-    };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--     đổi ảnh -->
+    <!--     đổi ảnh -->
     const imageUrls = [
 // ảnh chính
         /*<![CDATA[*/ "/uploads/[[${#strings.substringAfter(room.roomImg, 'uploads/')}]]" /*]]>*/,
@@ -283,50 +292,6 @@
                 alert("Chưa Có Ảnh. Vui Lòng Nhấn Giữ Để Thao Tác!");
         }
     }
-    document.addEventListener("DOMContentLoaded", function () {
-        for (let i = 0; i < imageUrls.length; i++) {
-            const imgElement = document.getElementById(`thumb-${i}`);
-            if (imgElement) {
-                imgElement.src = imageUrls[i] || "https://cdn-icons-png.flaticon.com/512/190/190737.png";
-            }
-        }
-    });
-
-
-    // //  chức năng của form ảnh chi tiết vơí url cũ
-    // function showOptions(index) {
-    //     const modal = document.getElementById('imageOptions');
-    //     modal.style.display = 'flex';
-    //
-    //     document.getElementById('editImage').onclick = function () {
-    //
-    //         const newUrl = prompt("Nhập URL ảnh mới:");
-    //         if (newUrl) {
-    //             imageUrls[index] = newUrl;
-    //             document.getElementById(`thumb-${index}`).src = newUrl;
-    //             document.getElementById('mainImage').src = newUrl; // Cập nhật ảnh chính
-    //         }
-    //         modal.style.display = 'none';
-    //     };
-    //
-    //
-    //     document.getElementById('closeModal').onclick = function () {
-    //         modal.style.display = 'none';
-    //     };
-    //
-    //
-    //
-    //     document.getElementById('deleteImage').onclick = function () {
-    //         const roomId = "your_room_id"
-    //         const imageId = "your_image_id"
-    //         fetch(`/delete-image-details/${imageId}/${roomId}`, {method: 'POST'})
-    //             .then(() => {
-    //                 imageUrls[index] = "";
-    //                 document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png";
-    //                 modal.style.display = 'none';
-    //             });
-    //     };
-    // }
 
 
 
@@ -375,6 +340,45 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<!--load ảnh mới cũ-->
+
+
+<!--//  chức năng của form ảnh chi tiết vơí url cũ-->
+<!--function showOptions(index) {-->
+<!--const modal = document.getElementById('imageOptions');-->
+<!--modal.style.display = 'flex';-->
+
+<!--document.getElementById('editImage').onclick = function () {-->
+
+<!--const newUrl = prompt("Nhập URL ảnh mới:");-->
+<!--if (newUrl) {-->
+<!--imageUrls[index] = newUrl;-->
+<!--document.getElementById(`thumb-${index}`).src = newUrl;-->
+<!--document.getElementById('mainImage').src = newUrl; // Cập nhật ảnh chính-->
+<!--}-->
+<!--modal.style.display = 'none';-->
+<!--};-->
+
+
+<!--document.getElementById('closeModal').onclick = function () {-->
+<!--modal.style.display = 'none';-->
+<!--};-->
+
+
+
+<!--document.getElementById('deleteImage').onclick = function () {-->
+<!--const roomId = "your_room_id"-->
+<!--const imageId = "your_image_id"-->
+<!--fetch(`/delete-image-details/${imageId}/${roomId}`, {method: 'POST'})-->
+<!--.then(() => {-->
+<!--imageUrls[index] = "";-->
+<!--document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png";-->
+<!--modal.style.display = 'none';-->
+<!--});-->
+<!--};-->
+<!--}-->
+
+
 
 
 

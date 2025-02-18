@@ -45,34 +45,59 @@ public class AdminController {
     private ImageRoomDetailService imageRoomDetailService;
 
 
-    @GetMapping("/image-details/{id}")
-    public String showImageDetails(@PathVariable Long id, Model model) {
-        List<ImageRoomDetail> images = imageRoomDetailService.findAllDetailImageByRoomId(id);
-        model.addAttribute("images", images);
-        Room room = roomService.getRoomById(Math.toIntExact(id));
-        model.addAttribute("room", room);
+//    @GetMapping("/image-details/{id}")
+//    public String showImageDetails(@PathVariable Long id, Model model) {
+//        List<ImageRoomDetail> images = imageRoomDetailService.findAllDetailImageByRoomId(id);
+//        model.addAttribute("images", images);
+//        Room room = roomService.getRoomById(Math.toIntExact(id));
+//        model.addAttribute("room", room);
+//
+//        System.out.println(room.toString());
+//        return "room-details-by-admin";
+//    }
 
-        System.out.println(room.toString());
-        return "room-details-by-admin";
-    }
 
-    @PostMapping("/add-image-details/{roomId}")
-    public String addImage(@PathVariable Long roomId, @ModelAttribute ImageRoomDetail imageRoomDetail) {
-        imageRoomDetailService.addImageRoomDetail(imageRoomDetail);
-        return "redirect:/image-details/" + roomId;
-    }
+
+
+
 
     @PostMapping("/delete-image-details/{imageId}/{roomId}")
-    public String deleteImage(@PathVariable Long imageId, @PathVariable String roomId) {
+    public String deleteImage(@PathVariable Long imageId, @PathVariable Long roomId) {
         imageRoomDetailService.deleteImageRoomDetail(imageId);
         return "redirect:/image-details/" + roomId;
     }
 
+
     @PostMapping("/edit-image-details/{imageId}/{roomId}")
-    public String editImage(@PathVariable Long imageId, @PathVariable String roomId, @ModelAttribute ImageRoomDetail imageRoomDetail) {
-        imageRoomDetailService.updateImageRoomDetail(imageId, imageRoomDetail);
+    public String editImage(@PathVariable Long imageId,
+                            @PathVariable Long roomId,
+                            @RequestParam(required = false) MultipartFile imgFile) {
+        if (imgFile != null && !imgFile.isEmpty()) {
+            String imagePath = imgUploadService.uploadImages(new MultipartFile[]{imgFile});
+
+            ì.deleteImageRoomDetail(imageId);
+
+
+
+
+
+
+
+
+            ImageRoomDetail imageRoomDetail = new ImageRoomDetail();
+            imageRoomDetail.setImageRoomDetailLink(imagePath);
+            imageRoomDetail.setImageRoomDetailPlaceCount(imageRoomDetailService.getMaxImageRoomDetailPlaceCountPlusOne());
+
+//            xoá trước nếu có để dùng chung với add và edit luôn
+            imageRoomDetailService.deleteImageRoomDetail(imageId);
+
+            imageRoomDetailService.addImageRoomDetail(imageId, imageRoomDetail);
+        }
         return "redirect:/image-details/" + roomId;
     }
+
+
+
 
 
 
@@ -96,6 +121,8 @@ public class AdminController {
         model.addAttribute("room", room);
         return "edit-room-with-file";
     }
+
+
 
 
     @PostMapping("/edit-room/{id}")

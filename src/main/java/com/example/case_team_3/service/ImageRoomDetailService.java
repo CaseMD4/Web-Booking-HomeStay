@@ -14,7 +14,7 @@ public class ImageRoomDetailService {
     private ImageRoomDetailRepository imageRoomDetailRepository;
 
 
-    public void addImageRoomDetail(ImageRoomDetail imageRoomDetail) {
+    public void addImageRoomDetail(Long imageId, ImageRoomDetail imageRoomDetail) {
         imageRoomDetailRepository.save(imageRoomDetail);
     }
 
@@ -28,10 +28,15 @@ public class ImageRoomDetailService {
         imageRoomDetailRepository.deleteById(id);
     }
 
-    // Xóa hàng loạt hình ảnh theo roomId
-    public void deleteAllImagesByRoomId(Long roomId) {
-        List<ImageRoomDetail> images = imageRoomDetailRepository.findByRoomId(roomId);
-        imageRoomDetailRepository.deleteAll(images);
+//    // Xóa hàng loạt hình ảnh theo roomId
+//    public void deleteAllImagesByRoomId(Long roomId) {
+//        List<ImageRoomDetail> images = imageRoomDetailRepository.findByRoomId(roomId);
+//        imageRoomDetailRepository.deleteAll(images);
+//    }
+
+    public int getMaxImageRoomDetailPlaceCountPlusOne() {
+        Integer maxCount = imageRoomDetailRepository.findMaxImageRoomDetailPlaceCount();
+        return (maxCount != null ? maxCount : 0) + 1;
     }
 
 

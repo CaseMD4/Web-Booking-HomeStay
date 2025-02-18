@@ -145,11 +145,17 @@
                         <img id="thumb-4" onclick="changeImage(this, 4)" alt="Thumbnail" class="thumbnail"/>
                         <img id="thumb-5" onclick="changeImage(this, 5)" alt="Thumbnail" class="thumbnail"/>
                         <img id="thumb-6" onclick="changeImage(this, 6)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-7" onclick="changeImage(this, 7)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-8" onclick="changeImage(this, 8)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-9" onclick="changeImage(this, 9)" alt="Thumbnail" class="thumbnail"/>
+                        <img id="thumb-10" onclick="changeImage(this, 10)" alt="Thumbnail" class="thumbnail"/>
 
                     </div>
                     <button class="nav-button next" onclick="moveRight()">&#10095;</button>
 
                 </div>
+
+
             </div>
             <div class="md:w-1/2 md:pl-8">
                 <h1 class="text-2xl font-bold mb-2">Luxurious Hotel Room</h1>
@@ -184,6 +190,8 @@
         <button id="editImage" class="btn btn-primary">Sửa ảnh</button>
         <button id="deleteImage" class="btn btn-danger">Xóa ảnh</button>
         <button id="closeModal" class="btn btn-secondary">Đóng</button>
+
+
     </div>
 </div>
 
@@ -191,8 +199,71 @@
 <script>
 
 
+    document.getElementById('editImage').onclick = function () {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+
+        fileInput.onchange = function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("imgFile", file);
+
+            const roomId = "your_room_id";
+            const imageId = "your_image_id";
+
+            fetch(`/edit-image-details/${imageId}/${roomId}`, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text())
+                .then(() => {
+                    const objectURL = URL.createObjectURL(file);
+                    imageUrls[index] = objectURL;
+                    document.getElementById(`thumb-${index}`).src = objectURL;
+                    document.getElementById('mainImage').src = objectURL;
+                    modal.style.display = 'none';
+                });
+        };
+
+        fileInput.click();
+    };
+
+    document.getElementById('deleteImage').onclick = function () {
+        const roomId = "your_room_id";
+        const imageId = "your_image_id";
+
+        fetch(`/delete-image-details/${imageId}/${roomId}`, {
+            method: 'POST'
+        }).then(() => {
+            imageUrls[index] = "";
+            document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png";
+            modal.style.display = 'none';
+        });
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--     đổi ảnh -->
     const imageUrls = [
-        // ảnh chính
+// ảnh chính
         /*<![CDATA[*/ "/uploads/[[${#strings.substringAfter(room.roomImg, 'uploads/')}]]" /*]]>*/,
         "",
         "",
@@ -200,22 +271,18 @@
         "",
         "",
         "",
+        "",
+        "",
+        "",
     ];
-
     function changeImage(img, index) {
         const mainImage = document.getElementById('mainImage');
         if (imageUrls[index]) {
             mainImage.src = imageUrls[index];
         } else {
-            const imageUrl = prompt("Nhập URL ảnh:");
-            if (imageUrl) {
-                imageUrls[index] = imageUrl;
-                mainImage.src = imageUrl;
-                document.getElementById(`thumb-${index}`).src = imageUrl;
-            }
+                alert("Chưa Có Ảnh. Vui Lòng Nhấn Giữ Để Thao Tác!");
         }
     }
-
     document.addEventListener("DOMContentLoaded", function () {
         for (let i = 0; i < imageUrls.length; i++) {
             const imgElement = document.getElementById(`thumb-${i}`);
@@ -226,8 +293,45 @@
     });
 
 
-    let track = document.querySelector('.image-track');
+    // //  chức năng của form ảnh chi tiết vơí url cũ
+    // function showOptions(index) {
+    //     const modal = document.getElementById('imageOptions');
+    //     modal.style.display = 'flex';
+    //
+    //     document.getElementById('editImage').onclick = function () {
+    //
+    //         const newUrl = prompt("Nhập URL ảnh mới:");
+    //         if (newUrl) {
+    //             imageUrls[index] = newUrl;
+    //             document.getElementById(`thumb-${index}`).src = newUrl;
+    //             document.getElementById('mainImage').src = newUrl; // Cập nhật ảnh chính
+    //         }
+    //         modal.style.display = 'none';
+    //     };
+    //
+    //
+    //     document.getElementById('closeModal').onclick = function () {
+    //         modal.style.display = 'none';
+    //     };
+    //
+    //
+    //
+    //     document.getElementById('deleteImage').onclick = function () {
+    //         const roomId = "your_room_id"
+    //         const imageId = "your_image_id"
+    //         fetch(`/delete-image-details/${imageId}/${roomId}`, {method: 'POST'})
+    //             .then(() => {
+    //                 imageUrls[index] = "";
+    //                 document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png";
+    //                 modal.style.display = 'none';
+    //             });
+    //     };
+    // }
 
+
+
+    //  nút trượt
+    let track = document.querySelector('.image-track');
     function moveRight() {
         let firstImage = track.children[0];
         track.style.transition = "transform 0.5s ease-in-out";
@@ -239,7 +343,6 @@
             track.style.transform = "translateX(0)";
         }, 500);
     }
-
     function moveLeft() {
         let lastImage = track.children[track.children.length - 1];
         track.style.transition = "none";
@@ -253,41 +356,11 @@
     }
 
 
-
-
-//     xử lý nhấn giữ
+    //  xử lý nhấn giữ để hiển thị form thao tác với ảnh
     let holdTimer;
-
-    function showOptions(index) {
-        const modal = document.getElementById('imageOptions');
-        modal.style.display = 'flex';
-
-        document.getElementById('editImage').onclick = function() {
-            // Thực hiện hành động sửa ảnh
-            const newUrl = prompt("Nhập URL ảnh mới:");
-            if (newUrl) {
-                imageUrls[index] = newUrl;
-                document.getElementById(`thumb-${index}`).src = newUrl;
-                document.getElementById('mainImage').src = newUrl; // Cập nhật ảnh chính
-            }
-            modal.style.display = 'none';
-        };
-
-        document.getElementById('deleteImage').onclick = function() {
-            // Thực hiện hành động xóa ảnh
-            imageUrls[index] = ""; // Xóa URL
-            document.getElementById(`thumb-${index}`).src = "https://cdn-icons-png.flaticon.com/512/190/190737.png"; // Hình ảnh mặc định
-            modal.style.display = 'none';
-        };
-
-        document.getElementById('closeModal').onclick = function() {
-            modal.style.display = 'none';
-        };
-    }
-
     document.querySelectorAll('.thumbnail').forEach((img, index) => {
         img.addEventListener('mousedown', () => {
-            holdTimer = setTimeout(() => showOptions(index), 500); // Hiển thị sau 500ms
+            holdTimer = setTimeout(() => showOptions(index), 500); //sau nửa s hiển thị form
         });
 
         img.addEventListener('mouseup', () => {
@@ -298,8 +371,15 @@
             clearTimeout(holdTimer); // Hủy nếu chuột ra ngoài
         });
     });
-
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+
+
+
+
+
+
